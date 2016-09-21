@@ -1,4 +1,4 @@
-angular.module('myApp').directive('helloWorld', function() {
+angular.module('myApp').directive('groupViewer', function() {
   return {
       restrict: 'AE',
       replace: 'true',
