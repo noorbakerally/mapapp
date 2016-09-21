@@ -1,4 +1,5 @@
 angular.module('myApp').controller('initController', function($scope) {
+	console.log("test");
 	var trees = [
 	{"y": 45.1652431769592, "x": 5.70811860693185, "code":"ESP29897"},
 	{"y": 45.1973657781335, "x": 5.73650327568813, "code":"ESP22846"},
