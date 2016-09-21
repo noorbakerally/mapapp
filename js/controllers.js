@@ -100,26 +100,49 @@ LIMIT 10
 			$scope.error = "Group name already exists";
 			
 		}
+
+		//creating the markers
+		markers = [];
+		for (var binding in bindings){
+			currentBind = bindings[binding];
+			var latitude = currentBind[$scope.lat].value;
+			var longitude = currentBind[$scope.long].value;
+			var currentMarker = L.marker([latitude, longitude]);
+			if ($scope.desc.length > 0){
+				str = $scope.desc;
+				ostr = $scope.desc;
+				newStr = "";
+				i=0;l=0;g=0;
+				while (i< ostr.length){
+				   l = str.indexOf("<");
+				   if (l==-1) {
+				     newStr = newStr + str;
+				     break;
+				   };
+				   g = str.indexOf(">");  
+				   partStr = str.substring(l+1,g);
+				   if (partStr in currentBind){
+				   		newStr = newStr + str.substring(0,l) + currentBind[partStr].value;
+					   str = str.substring(g+1,str.length);
+					   i = g;  
+				   } else {
+				   		continue;
+				   }
+				   
+				}
+				console.log(newStr);
+				currentMarker.bindPopup(newStr)
+
+			}
+			markers.push(currentMarker);
+		}
+		$rootScope.layers[$scope.groupname] = L.layerGroup(markers);
 	};
 
-	/*
-	str = "This is a <country> of name <asd> so that <whe> there is <asd> when can <asd>";
-	ostr = str;
-	newStr = "";
-	i=0;l=0;g=0;
-	while (i< ostr.length){
-	   l = str.indexOf("<");
-	   if (l==-1) {
-	     newStr = newStr + str;
-	     break;
-	   };
-	   g = str.indexOf(">");  
-	   partStr = str.substring(l+1,g);
-	   newStr = newStr + str.substring(0,l) + partStr;
-	   str = str.substring(g+1,str.length);
-	   i = g;  
-	}
-	console.log(newStr);
-	*/
+	
+	
+	
+	
+	
 	
 });
