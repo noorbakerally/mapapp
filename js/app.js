@@ -3,9 +3,5 @@ app.run(function($rootScope) {
     $rootScope.config = {};
     $rootScope.layers = {};
 
-
-
-
-    
 });
 

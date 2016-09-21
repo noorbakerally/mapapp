@@ -1,5 +1,4 @@
-angular.module('myApp').controller('initController', function($scope) {
-	console.log("test");
+angular.module('myApp').controller('initController', function($scope,$rootScope,SPARQLService,Utilities) {
 	var trees = [
 	{"y": 45.1652431769592, "x": 5.70811860693185, "code":"ESP29897"},
 	{"y": 45.1973657781335, "x": 5.73650327568813, "code":"ESP22846"},
@@ -25,6 +24,60 @@ angular.module('myApp').controller('initController', function($scope) {
 		- group type
 
 	*/
+	var newConfig = {};
+	newConfig["groupName"] = "Test1";
+	newConfig["lat"] = "caplat";
+	newConfig["long"] = "caplong";
+	newConfig["desc"] = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
+	newConfig["endpointURL"] = "https://dbpedia.org/sparql";
+	newConfig["SPARQLQuery"] = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+
+SELECT distinct ?country ?capital ?caplat ?caplong
+WHERE {
+  ?country rdf:type dbo:Country .
+  ?country  dbo:capital ?capital .
+  ?capital geo:lat ?caplat ;
+     geo:long ?caplong .
+  
+}
+ORDER BY ?country
+LIMIT 10
+	`;
+
+
+	var data = SPARQLService.query(newConfig["endpointURL"],encodeURIComponent(newConfig["SPARQLQuery"]));
+	var bindings;
+	data.then(function (answer){
+		sparql_result = answer.data;
+		bindings = answer.data.results.bindings;
+
+		//creating the markers
+		markers = [];
+		for (var binding in bindings){
+			currentBind = bindings[binding];
+			var latitude = currentBind[newConfig["lat"]].value;
+			var longitude = currentBind[newConfig["long"]].value;
+			var currentMarker = L.marker([latitude, longitude]);
+			currentMarker.bindPopup(Utilities.generateDescription(newConfig["desc"],currentBind));
+
+			markers.push(currentMarker);
+		}
+		$rootScope.config[newConfig["groupName"]] = newConfig;
+		$rootScope.layers[newConfig["groupName"]] = L.layerGroup(markers);
+
+
+	},
+	function (error){
+
+	}); 
+
+
+
+
+
+
 });
 
 angular.module('myApp').controller('GroupViewerController', function($scope,$rootScope) {
