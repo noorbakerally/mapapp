@@ -1,0 +1,17 @@
+<div ng-controller="GroupViewerController">
+<br/>
+
+	<div class="list-group pre-scrollable" style = "max-height:70%" ng-repeat="conf in configs">
+	  
+	  <li class="list-group-item">
+	  	<span class="badge">{{layers[conf.groupName].getLayers().length}}</span>
+	    <h4 class="list-group-item-heading">{{conf.groupName}}</h4>
+	    <div class="checkbox">
+	  		<label><input type="checkbox">Show</label>
+		</div>
+	  </li>
+
+	</div>
+
+
+</div>
