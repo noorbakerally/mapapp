@@ -30,16 +30,29 @@ angular.module('myApp').controller('initController', function($scope) {
 angular.module('myApp').controller('GroupViewerController', function($scope,$rootScope) {
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
+
+	$scope.show = function(groupName){
+		console.log($scope.groupShow);
+		if ($scope.groupShow){
+			$scope.layers[groupName].addTo($rootScope.map);	
+		} else {
+			$rootScope.map.removeLayer($scope.layers[groupName]);
+		}
+		
+	}
+});
+angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope) {
+	$scope.configs = $rootScope.config;
+	$scope.layers = $rootScope.layers;
 });
 
-
-angular.module('myApp').controller('mapController', function($scope) {
+angular.module('myApp').controller('mapController', function($scope,$rootScope) {
 	var mymap = L.map('mapid').setView([45.1, 5.7], 8);
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiYmFrZW5vb3IiLCJhIjoiY2l0YjNjczhpMDAxMzJ1cDc5aXVxeHZ5NiJ9.8YzFSaP-znz8JUeHYybuTg', {
 			maxZoom: 18,
 			id: 'bakenoor.1eh9o2c2'
 		}).addTo(mymap);
-
+	$rootScope.map = mymap;
 	var trees = $scope.models.trees;
 	var trees_layer = L.layerGroup();
 	for (var tree in trees){
