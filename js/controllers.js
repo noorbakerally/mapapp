@@ -9,6 +9,7 @@ angular.module('myApp').controller('initController', function($scope) {
 	$scope.models = {};
 	$scope.models["trees"] = trees;
 
+
 	/*
 		- group name
 		- item type
@@ -23,10 +24,6 @@ angular.module('myApp').controller('initController', function($scope) {
 		- group type
 
 	*/
-
-
-
-
 });
 
 angular.module('myApp').controller('mapController', function($scope) {
@@ -43,4 +40,20 @@ angular.module('myApp').controller('mapController', function($scope) {
 		trees_layer.addLayer(new_layer)
 	}
 	trees_layer.addTo(mymap);
+});
+
+
+angular.module('myApp').controller('SPARQLQueryController', function($scope,$sce,SPARQLService) {
+	
+	$scope.url = "https://dbpedia.org/sparql";
+	$scope.querystr = "select distinct ?Concept where {[] a ?Concept} LIMIT 100";
+	$scope.query = function (){
+		var data = SPARQLService.query($scope.url,$scope.querystr);
+		data.then(function (answer){
+			console.log(answer.data);
+			$scope.result = $sce.trustAsHtml(answer.data);
+		});
+	};
+
+	
 });

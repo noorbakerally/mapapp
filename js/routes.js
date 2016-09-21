@@ -1,6 +1,6 @@
 angular.module('myApp').config(function($routeProvider) {
   $routeProvider
   .when("/", {
-    templateUrl : "main.html"
+    templateUrl : "htmls/sparql.html"
   })
 });
