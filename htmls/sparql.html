@@ -71,35 +71,35 @@
               </div>
           </div>
           <div ng-show="sparql_error" style="color:red">
-            Invalid SPARQL Query
+            Error:{{error}}
           </div>
 
           <div style="width:30%">
               <div class="form-group">
                 <label for="groupname">Group name</label>
-                <input type="text" class="form-control" id="groupname">
+                <input type="text" class="form-control" ng-model="groupname">
               </div>
 
               <div class="form-group">
                 <label for="lat">Latitude Column:</label>
-                <select class="form-control" id="lat">
+                <select class="form-control" ng-model="lat">
                   <option ng-repeat="x in columns">{{x}}</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="long">Longitude Column:</label>
-                <select class="form-control" id="long">
+                <select class="form-control" ng-model="long">
                     <option ng-repeat="x in columns">{{x}}</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="desc">Description Column:</label>
-                <input type="text" class="form-control" id="desc">
+                <input type="text" class="form-control" ng-model="desc">
               </div>
 
-              <button type="button" class="btn btn-default">Add</button>
+              <button type="button" class="btn btn-default" ng-click="addGroup()">Add</button>
           <div>
           
     </div>

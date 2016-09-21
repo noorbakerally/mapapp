@@ -1,5 +1,4 @@
 angular.module('myApp').controller('initController', function($scope) {
-	
 	var trees = [
 	{"y": 45.1652431769592, "x": 5.70811860693185, "code":"ESP29897"},
 	{"y": 45.1973657781335, "x": 5.73650327568813, "code":"ESP22846"},
@@ -44,7 +43,7 @@ angular.module('myApp').controller('mapController', function($scope) {
 });
 
 
-angular.module('myApp').controller('SPARQLQueryController', function($scope,$sce,SPARQLService) {
+angular.module('myApp').controller('SPARQLQueryController', function($scope,$rootScope,$sce,SPARQLService) {
 	
 	$scope.url = "https://dbpedia.org/sparql";
 	$scope.querystr = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -64,6 +63,7 @@ LIMIT 10
 	`;
 	$scope.sparql_error = false;
 	var sparql_result;
+	var bindings;
 	$scope.query = function (){
 		$scope.sparql_status = false;
 		var data = SPARQLService.query($scope.url,encodeURIComponent($scope.querystr));
@@ -71,17 +71,55 @@ LIMIT 10
 			console.log(answer);
 			sparql_result = answer.data;
 			$scope.columns = answer.data.head.vars;
+			bindings = answer.data.results.bindings;
 			$scope.sparql_status = true;
 			$scope.numResults = answer.data.results.bindings.length;
 			$scope.sparql_error = false;
 		},
 		function (error){
 			$scope.sparql_error = true;
+			$scope.error = "Invalid SPARQL Query"
 			$scope.sparql_status = false;
 			$scope.columns = [];
 		}
 		); 
 	};
+	$scope.addGroup = function (){
+		var newConfig = {};
+		newConfig["groupName"] = $scope.groupname;
+		newConfig["lat"] = $scope.lat;
+		newConfig["long"] = $scope.long;
+		newConfig["desc"] = $scope.desc;
+		newConfig["endpointURL"] = $scope.url;
+		newConfig["SPARQLQuery"] = $scope.querystr
+		if ($scope.groupname in $rootScope.config){
+			$scope.sparql_error = true;
+		} else {
+			$rootScope.config[$scope.groupname] = newConfig;
+			$scope.sparql_error = false;
+			$scope.error = "Group name already exists";
+			
+		}
+	};
 
+	/*
+	str = "This is a <country> of name <asd> so that <whe> there is <asd> when can <asd>";
+	ostr = str;
+	newStr = "";
+	i=0;l=0;g=0;
+	while (i< ostr.length){
+	   l = str.indexOf("<");
+	   if (l==-1) {
+	     newStr = newStr + str;
+	     break;
+	   };
+	   g = str.indexOf(">");  
+	   partStr = str.substring(l+1,g);
+	   newStr = newStr + str.substring(0,l) + partStr;
+	   str = str.substring(g+1,str.length);
+	   i = g;  
+	}
+	console.log(newStr);
+	*/
 	
 });
