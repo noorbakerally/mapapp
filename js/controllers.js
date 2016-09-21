@@ -12,7 +12,7 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 		
 	}
 });
-angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope) {
+angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,Utilities) {
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
 	$scope.show = function(groupName){
@@ -33,7 +33,52 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 			use it in checkbox expression to show or hide 
 
 		*/
+
+		var configObj = $rootScope.config[groupName];
+		$rootScope.layers = {};
+
+		if ($scope.groupShow){
+			if (configObj["promiseResolved"]) {
+
+			} else {
+				var bindings;
+				var data = configObj["promise"];
+				data.then(function (answer){
+					sparql_result = answer.data;
+					bindings = answer.data.results.bindings;
+
+					//creating the markers
+					markers = [];
+					for (var binding in bindings){
+						currentBind = bindings[binding];
+						var latitude = currentBind[configObj["lat"]].value;
+						var longitude = currentBind[configObj["long"]].value;
+						var currentMarker = L.marker([latitude, longitude]);
+						currentMarker.bindPopup(Utilities.generateDescription(configObj["desc"],currentBind));
+
+						markers.push(currentMarker);
+					}
+					$rootScope.layers[configObj["groupName"]] = L.layerGroup(markers);
+					$rootScope.layers[configObj["groupName"]].addTo($rootScope.map);	
+					console.log($rootScope.layers);
+
+				},
+					function (error){
+
+				}); 
+
+			}
+			
+			
+		} else {
+			$rootScope.map.removeLayer($rootScope.layers[groupName]);
+		}
+
 		
+    
+		
+
+
 	}
 
 });
