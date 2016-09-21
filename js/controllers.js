@@ -16,7 +16,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
 	$scope.show = function(groupName){
-		console.log(groupName);
+	
 		/*
 		if ($scope.groupShow){
 			$scope.layers[groupName].addTo($rootScope.map);	
@@ -39,14 +39,14 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 
 		if ($scope.groupShow){
 			if (configObj["promiseResolved"]) {
-
+				$rootScope.config[groupName]["layerGroup"].addTo($rootScope.map);
 			} else {
 				var bindings;
 				var data = configObj["promise"];
 				data.then(function (answer){
 					sparql_result = answer.data;
 					bindings = answer.data.results.bindings;
-
+					configObj["promiseResolved"] = true;
 					//creating the markers
 					markers = [];
 					for (var binding in bindings){
@@ -58,10 +58,8 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 
 						markers.push(currentMarker);
 					}
-					$rootScope.layers[configObj["groupName"]] = L.layerGroup(markers);
-					$rootScope.layers[configObj["groupName"]].addTo($rootScope.map);	
-					console.log($rootScope.layers);
-
+					$rootScope.config[groupName]["layerGroup"] = L.layerGroup(markers);
+					$rootScope.config[groupName]["layerGroup"].addTo($rootScope.map);
 				},
 					function (error){
 
@@ -71,7 +69,8 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 			
 			
 		} else {
-			$rootScope.map.removeLayer($rootScope.layers[groupName]);
+			console.log($rootScope.config[groupName].layerGroup);
+			$rootScope.map.removeLayer($rootScope.config[groupName]["layerGroup"]);
 		}
 
 		
