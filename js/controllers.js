@@ -14,6 +14,7 @@ angular.module('myApp').controller('initController', function($scope) {
 		- group name
 		- item type
 		- icon type
+		- color
 		- number of items
 		- Options:
 			- show 
@@ -46,13 +47,40 @@ angular.module('myApp').controller('mapController', function($scope) {
 angular.module('myApp').controller('SPARQLQueryController', function($scope,$sce,SPARQLService) {
 	
 	$scope.url = "https://dbpedia.org/sparql";
-	$scope.querystr = "select distinct ?Concept where {[] a ?Concept} LIMIT 100";
+	$scope.querystr = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+
+SELECT distinct ?country ?capital ?caplat ?caplong
+WHERE {
+  ?country rdf:type dbo:Country .
+  ?country  dbo:capital ?capital .
+  ?capital geo:lat ?caplat ;
+     geo:long ?caplong .
+  
+}
+ORDER BY ?country
+LIMIT 10
+	`;
+	$scope.sparql_error = false;
+	var sparql_result;
 	$scope.query = function (){
-		var data = SPARQLService.query($scope.url,$scope.querystr);
+		$scope.sparql_status = false;
+		var data = SPARQLService.query($scope.url,encodeURIComponent($scope.querystr));
 		data.then(function (answer){
-			console.log(answer.data);
-			$scope.result = $sce.trustAsHtml(answer.data);
-		});
+			console.log(answer);
+			sparql_result = answer.data;
+			$scope.columns = answer.data.head.vars;
+			$scope.sparql_status = true;
+			$scope.numResults = answer.data.results.bindings.length;
+			$scope.sparql_error = false;
+		},
+		function (error){
+			$scope.sparql_error = true;
+			$scope.sparql_status = false;
+			$scope.columns = [];
+		}
+		); 
 	};
 
 	

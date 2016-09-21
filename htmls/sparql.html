@@ -58,6 +58,49 @@
           <br/>
           <div id="sparqlresult" ng-bind-html="result">
           </div>
+
+          <div ng-show="sparql_status">
+              <h4>SPARQL Results</h4>
+
+              <div class="form-group" id="sparql_result_details">
+                <label for="lat">Number of Results:{{numResults}}</label><br/>
+                <label for="lat">Columns:</label><br/>
+                <ul>
+                  <li ng-repeat="x in columns">{{x}}</li>
+                </ul>
+              </div>
+          </div>
+          <div ng-show="sparql_error" style="color:red">
+            Invalid SPARQL Query
+          </div>
+
+          <div style="width:30%">
+              <div class="form-group">
+                <label for="groupname">Group name</label>
+                <input type="text" class="form-control" id="groupname">
+              </div>
+
+              <div class="form-group">
+                <label for="lat">Latitude Column:</label>
+                <select class="form-control" id="lat">
+                  <option ng-repeat="x in columns">{{x}}</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="long">Longitude Column:</label>
+                <select class="form-control" id="long">
+                    <option ng-repeat="x in columns">{{x}}</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="desc">Description Column:</label>
+                <input type="text" class="form-control" id="desc">
+              </div>
+
+              <button type="button" class="btn btn-default">Add</button>
+          <div>
           
     </div>
   </div>
