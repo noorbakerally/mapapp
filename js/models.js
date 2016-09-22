@@ -44,6 +44,31 @@ models.DataItem = function(latCol,longCol){
 	this.latCol = latCol;
 	this.longCol = longCol;
 }
+models.DataItem.prototype.getDescription = function(desc){
+	if (desc.length > 0){
+		str = desc;
+		ostr = desc;
+		newStr = "";
+		i=0;l=0;g=0;
+		while (i< ostr.length){
+		   l = str.indexOf("<");
+		   if (l==-1) {
+		     newStr = newStr + str;
+		     break;
+		   };
+		   g = str.indexOf(">");  
+		   partStr = str.substring(l+1,g);
+		   if (partStr in this){
+		   		newStr = newStr + str.substring(0,l) + this[partStr];
+			   str = str.substring(g+1,str.length);
+			   i = g;  
+		   } else {
+		   		continue;
+		   }
+		}
+	}
+	return newStr;
+}
 
 models.DataSource = function(url,sourceContent,promise,promiseResolved,dataItems){
 	this.url = url;
@@ -88,6 +113,12 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			dataItem[confObj.latCol] = currentBind[confObj.latCol].value;
 			dataItem[confObj.longCol] = currentBind[confObj.longCol].value;
 			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
+			
+
+			var dataItemDescription = dataItem.getDescription(confObj.markerDescription);
+			if (dataItemDescription.length > 0){
+				currentMarker.bindPopup(dataItemDescription);
+			}
 
 			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 
