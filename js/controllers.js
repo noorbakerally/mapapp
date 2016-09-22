@@ -9,7 +9,6 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 		} else {
 			$rootScope.map.removeLayer($scope.layers[groupName]);
 		}
-		
 	}
 });
 angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,Utilities) {
@@ -37,7 +36,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 		var configObj = $rootScope.config[groupName];
 		$rootScope.layers = {};
 
-		if ($scope.groupShow){
+		if (configObj.layerShow){
 			if (configObj["promiseResolved"]) {
 				$rootScope.config[groupName]["layerGroup"].addTo($rootScope.map);
 			} else {
@@ -60,6 +59,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 					}
 					$rootScope.config[groupName]["layerGroup"] = L.layerGroup(markers);
 					$rootScope.config[groupName]["layerGroup"].addTo($rootScope.map);
+					$rootScope.config[groupName]["layerShow"] = true;
 				},
 					function (error){
 
@@ -71,6 +71,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 		} else {
 			console.log($rootScope.config[groupName].layerGroup);
 			$rootScope.map.removeLayer($rootScope.config[groupName]["layerGroup"]);
+			$rootScope.config[groupName]["layerShow"] = false;
 		}
 
 		
@@ -279,6 +280,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 		newConfig["promise"] = data;
 		newConfig["promiseResolved"] = false;
+		newConfig["layerShow"] = false;
 		$rootScope.config[newConfig["groupName"]] = newConfig;
 
 	}
