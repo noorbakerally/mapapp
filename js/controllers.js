@@ -32,11 +32,12 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 				configObj.layerGroup.addTo($rootScope.map);
 			} else {
 				//console.log(configObj.getLayerGroup());
-				configObj.getLayerGroup().addTo($rootScope.map);
+				configObj.getLayerGroup();
+				configObj.layerGroup.addTo($rootScope.map);
+				
 			}
 		} else {
-			
-			$rootScope.map.removeLayer(configObj.getLayerGroup());
+			$rootScope.map.removeLayer(configObj.layerGroup);
 			configObj.visible = false;
 		}
 
