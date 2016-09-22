@@ -82,6 +82,28 @@ models.DataSource.prototype.showDetails = function (){
 	console.log(this.url);
 };
 
+
+models.GeoJSONDataSource = function (){
+
+}
+
+
+models.GeoJSONDataSource.prototype = Object.create(models.DataSource.prototype);
+models.GeoJSONDataSource.constructor = models.GeoJSONDataSource;
+
+
+
+
+models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
+	this.promise.then(function (answer){
+		var geoJSONObject = answer.data;
+		confObj.layerGroup = L.geoJson(geoJSONObject);
+		confObj.layerGroup.addTo(map);
+		
+	},function (error){});
+}
+
+
 models.SPARQLDataSource = function (url,query,sparqlResult){
 	models.DataSource.call(this);
 	this.url = url;
@@ -89,9 +111,13 @@ models.SPARQLDataSource = function (url,query,sparqlResult){
 	this.sparqlResult = sparqlResult;
 
 }
+
 models.SPARQLDataSource.prototype = Object.create(models.DataSource.prototype);
 models.SPARQLDataSource.constructor = models.SPARQLDataSource;
 
+models.SPARQLDataSource.prototype.getDataItems = function(map,confObj){
+	configObj.dataSource.getDataItemsWithLatLong(map,configObj);
+}
 
 models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj){
 	this.promise.then(function (answer){

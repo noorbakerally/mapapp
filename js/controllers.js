@@ -29,7 +29,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 			if (configObj.dataSource.promiseResolved) {
 				configObj.layerGroup.addTo($rootScope.map);
 			} else {
-				configObj.dataSource.getDataItemsWithLatLong($rootScope.map,configObj);
+				configObj.dataSource.getDataItems($rootScope.map,configObj);
 			}
 		} else {
 			$rootScope.map.removeLayer(configObj.layerGroup);
@@ -170,7 +170,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 	var configs = {};
 	
-
+	/*
 	layerConfig1 = new models.MarkerLayerConfig();
 	layerConfig1.name = "Test1";
 	layerConfig1.color = "FE7569";
@@ -225,13 +225,20 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	LIMIT 10
 		`;
 	configs["Test2"] = layerConfig2;
+	*/
+
+	layerConfig3 = new models.LayerConfig();
+	layerConfig3.name = "Test3";
+	layerConfig3.dataSource = new models.GeoJSONDataSource();
+	layerConfig3.dataSource.url = "https://raw.githubusercontent.com/mledoze/countries/master/data/fra.geo.json";
+	layerConfig3.description = "Description about Test 3";
+	configs["Test3"] = layerConfig3;
 
 
 	for (var config in configs ){
 		var newConfig = configs[config];
 		var data = SPARQLService.query(newConfig.dataSource.url,encodeURIComponent(newConfig.dataSource.query));
-		var bindings;
-
+		
 		newConfig.dataSource.promise = data;
 		newConfig.dataSource.promiseResolved = false;
 		newConfig.visible = false;
