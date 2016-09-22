@@ -3,15 +3,6 @@ var models = angular.module('myApp').models;
 angular.module('myApp').controller('GroupViewerController', function($scope,$rootScope) {
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
-
-	$scope.show = function(groupName){
-		console.log($scope.groupShow);
-		if ($scope.groupShow){
-			$scope.layers[groupName].addTo($rootScope.map);	
-		} else {
-			$rootScope.map.removeLayer($scope.layers[groupName]);
-		}
-	}
 });
 angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,$location,Utilities) {
 	
@@ -30,38 +21,11 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
 
-	$scope.icon = function (obj){
-		var url;
-		if (obj.iconURL){
-			url = obj.iconURL;
-		} else {
-			url = $rootScope.markerURL+obj.markerColor;
-		}
-		return url;
-	};
-
+	
 	$scope.show = function(groupName){
 	
-		/*
-		if ($scope.groupShow){
-			$scope.layers[groupName].addTo($rootScope.map);	
-		} else {
-			$rootScope.map.removeLayer($scope.layers[groupName]);
-		}*/
-		/*
-			check if promise has been resolved
-			if not resolve promise, add layer to layers in rootscope
-
-			if resolved, then based on whether should show or hide, show or hide layer
-
-			have a global array in rootscope which holds which layers are avaliable and which are not
-			use it in checkbox expression to show or hide 
-
-		*/
-
 		var configObj = $rootScope.config[groupName];
-		$rootScope.layers = {};
-
+		
 		if (configObj.layerShow){
 			if (configObj["promiseResolved"]) {
 				$rootScope.config[groupName]["layerGroup"].addTo($rootScope.map);
@@ -235,16 +199,19 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	
 
 	var configs = {};
+	
 
-	configs["Test1"] = {};
-	configs["Test1"]["groupName"] = "Test1";
-	configs["Test1"]["lat"] = "caplat";
-	configs["Test1"]["long"] = "caplong";
-	configs["Test1"]["desc"] = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
-	configs["Test1"]["layerDesc"] = "Description about Test 1";
-	configs["Test1"]["endpointURL"] = "https://dbpedia.org/sparql";
-	configs["Test1"]["markerColor"] = "FE7569";
-	configs["Test1"]["SPARQLQuery"] = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+	layerConfig1 = new models.MarkerLayerConfig();
+	layerConfig1.name = "Test1";
+	layerConfig1.color = "FE7569";
+	layerConfig1.latCol = "caplat";
+	layerConfig1.longCol = "caplong";
+	layerConfig1.markerDescription = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
+	layerConfig1.description = "Description about Test 1";
+	layerConfig1.dataSource = new models.SPARQLDataSource();
+	layerConfig1.dataSource.url = "https://dbpedia.org/sparql";
+	
+	layerConfig1.dataSource.query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 	PREFIX dbo: <http://dbpedia.org/ontology/>
 
@@ -259,17 +226,20 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	ORDER BY ?country
 	LIMIT 10
 		`;
+	configs["Test1"] = layerConfig1;
 
 
-	configs["Test2"] = {};
-	configs["Test2"]["groupName"] = "Test2";
-	configs["Test2"]["lat"] = "caplat";
-	configs["Test2"]["long"] = "caplong";
-	configs["Test2"]["desc"] = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
-	configs["Test2"]["layerDesc"] = "Description about Test 2";
-	configs["Test2"]["endpointURL"] = "https://dbpedia.org/sparql";
-	configs["Test2"]["iconURL"] ="/img/tree/tree-24-32.png";
-	configs["Test2"]["SPARQLQuery"] = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+	layerConfig2 = new models.MarkerLayerConfig();
+	layerConfig2.name = "Test2";
+	layerConfig2.url = "/img/tree/tree-24-32.png";
+	layerConfig2.latCol = "caplat";
+	layerConfig2.longCol = "caplong";
+	layerConfig2.markerDescription = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
+	layerConfig2.description = "Description about Test 2";
+	layerConfig2.dataSource = new models.SPARQLDataSource();
+	layerConfig2.dataSource.url = "https://dbpedia.org/sparql";
+	
+	layerConfig2.dataSource.query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 	PREFIX dbo: <http://dbpedia.org/ontology/>
 
@@ -284,17 +254,19 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	ORDER BY ?country
 	LIMIT 10
 		`;
+	configs["Test2"] = layerConfig2;
 
 
 	for (var config in configs ){
 		var newConfig = configs[config];
-		var data = SPARQLService.query(newConfig["endpointURL"],encodeURIComponent(newConfig["SPARQLQuery"]));
+		var data = SPARQLService.query(newConfig.dataSource.url,encodeURIComponent(newConfig.dataSource.query));
 		var bindings;
 
-		newConfig["promise"] = data;
-		newConfig["promiseResolved"] = false;
-		newConfig["layerShow"] = false;
-		$rootScope.config[newConfig["groupName"]] = newConfig;
+		newConfig.dataSource.promise = data;
+		newConfig.dataSource.promiseResolved = false;
+		newConfig.visible = false;
+
+		$rootScope.config[newConfig.name] = newConfig;
 
 	}
 });
