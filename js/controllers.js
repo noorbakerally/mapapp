@@ -43,10 +43,11 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 
 angular.module('myApp').controller('mapController', function($scope,$rootScope) {
 	var mymap = L.map('mapid').setView([45.1, 5.7], 3);
-		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiYmFrZW5vb3IiLCJhIjoiY2l0YjNjczhpMDAxMzJ1cDc5aXVxeHZ5NiJ9.8YzFSaP-znz8JUeHYybuTg', {
-			maxZoom: 18,
-			id: 'bakenoor.1eh9o2c2'
-		}).addTo(mymap);
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+		maxZoom: 18,
+		accessToken:'sk.eyJ1IjoiYmFrZW5vb3IiLCJhIjoiY2l0YjNjczhpMDAxMzJ1cDc5aXVxeHZ5NiJ9.8YzFSaP-znz8JUeHYybuTg',
+		id: 'bakenoor.1eh9o2c2'
+	}).addTo(mymap);
 	$rootScope.map = mymap;
 	
 });
