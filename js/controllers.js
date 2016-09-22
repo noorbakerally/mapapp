@@ -25,6 +25,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.show = function(groupName){
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 		var configObj = $rootScope.config[groupName];
+
 		if (configObj.visible){
 			if (configObj.dataSource.promiseResolved) {
 				configObj.layerGroup.addTo($rootScope.map);
@@ -137,16 +138,44 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	
 
 	var configs = {
-	    "Test3": {
-	        "type": "LayerConfig",
-	        "name": "Test3",
-	        "description": "Description about Test 3",
-	        "dataSource": {
-	            "type": "GeoJSONDataSource",
-	            "url": "https://raw.githubusercontent.com/mledoze/countries/master/data/fra.geo.json"
-	        }
-	    }
-	};
+    "Test1": {
+        "type": "MarkerLayerConfig",
+        "name": "Test1",
+        "color": "FE7569",
+        "latCol": "caplat",
+        "longCol": "caplong",
+        "markerDescription": "The latitude and longitude for <country> is <caplat> and <caplong> respectively",
+        "description": "Description about Test 1",
+        "dataSource": {
+            "type": "SPARQLDataSource",
+            "url": "https://dbpedia.org/sparql",
+            "query": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n\tPREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\r\n\tPREFIX dbo: <http://dbpedia.org/ontology/>\r\n\r\n\tSELECT distinct ?country ?capital ?caplat ?caplong\r\n\tWHERE {\r\n\t  ?country rdf:type dbo:Country .\r\n\t  ?country  dbo:capital ?capital .\r\n\t  ?capital geo:lat ?caplat ;\r\n\t     geo:long ?caplong .\r\n\t  \r\n\t}\r\n\tORDER BY ?country\r\n\tLIMIT 10"
+        }
+    },
+    "Test2": {
+        "type": "MarkerLayerConfig",
+        "name": "Test2",
+        "url": "/img/tree/tree-24-32.png",
+        "latCol": "lat",
+        "longCol": "long",
+        "markerDescription": "The latitude and longitude for tree with <code> is <lat> and <long> respectively",
+        "description": "Description about Test 2",
+        "dataSource": {
+            "type": "SPARQLDataSource",
+            "url": "http://data.mondeca.com/egc2017/sparql",
+            "query": "PREFIX wgs84_pos:<http:\/\/www.w3.org\/2003\/01\/geo\/wgs84_pos#>\r\nPREFIX rdf: <http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#>\r\nSELECT ?lat ?long ?code\r\nWHERE {\r\n  ?subject rdf:type <http:\/\/linkedgeodata.org\/ontology\/Tree>;\r\n\t\t wgs84_pos:lat ?lat;\r\n\t\t wgs84_pos:long ?long;\r\n\t\t <http:\/\/data.lof.com\/def\/tonto#code> ?code\r\n}\r\nLIMIT 25"
+        }
+    },
+    "Test3": {
+        "type": "LayerConfig",
+        "name": "Test3",
+        "description": "Description about Test 3",
+        "dataSource": {
+            "type": "GeoJSONDataSource",
+            "url": "https://raw.githubusercontent.com/mledoze/countries/master/data/fra.geo.json"
+        }
+    }
+};
 	
 	
 	
@@ -158,6 +187,16 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 		if (newConfig.type == "LayerConfig"){
 			newLayerConfig = new models.LayerConfig();
+		} else if (newConfig.type == "MarkerLayerConfig"){
+			newLayerConfig = new models.MarkerLayerConfig();
+			if (newConfig.color){
+				newLayerConfig.color = newConfig.color;
+			} else {
+				newLayerConfig.url = newConfig.url;
+			}
+			newLayerConfig.latCol = newConfig.latCol;
+			newLayerConfig.longCol = newConfig.longCol;
+			newLayerConfig.markerDescription = newConfig.markerDescription;
 		}
 
 		newLayerConfig.name = newConfig.name;
@@ -165,6 +204,9 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 		if (newConfig.dataSource.type == "GeoJSONDataSource"){
 			newLayerConfig.dataSource = new models.GeoJSONDataSource();
+		} else if (newConfig.dataSource.type == "SPARQLDataSource"){
+			newLayerConfig.dataSource = new models.SPARQLDataSource();
+			newLayerConfig.dataSource.query = newConfig.dataSource.query;
 		}
 		newLayerConfig.dataSource.url = newConfig.dataSource.url;
 

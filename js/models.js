@@ -122,6 +122,7 @@ models.SPARQLDataSource.prototype.getDataItems = function(map,confObj){
 models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj){
 	this.promise.then(function (answer){
 		this.sparqlResult = answer.data;
+		console.log(answer);
 		var bindings = answer.data.results.bindings;
 		this.promiseResolved = true;
 		markers = [];
