@@ -99,7 +99,6 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		var geoJSONObject = answer.data;
 		confObj.layerGroup = L.geoJson(geoJSONObject);
 		confObj.layerGroup.addTo(map);
-		
 	},function (error){});
 }
 
