@@ -1,3 +1,5 @@
+var models = angular.module('myApp').models;
+
 angular.module('myApp').controller('GroupViewerController', function($scope,$rootScope) {
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
@@ -230,6 +232,8 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		- group type
 
 	*/
+	
+
 	var configs = {};
 
 	configs["Test1"] = {};
