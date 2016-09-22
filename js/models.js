@@ -30,19 +30,12 @@ models.MarkerLayerConfig.prototype.getIconURL = function (){
 		return (this.defaultMarkerURL+this.color);
 	}
 }
-models.MarkerLayerConfig.prototype.getLayerGroup = function () {
+models.MarkerLayerConfig.prototype.getLayerGroup = function (map) {
 	var markers = []
 	if (this.dataSource.promiseResolved){
 		return this.layerGroup;
 	} else {
-		this.dataSource.getDataItemsWithLatLong();
-		for (var dataItemNum in this.dataSource.dataItems){
-			var dataItem = this.dataSource.dataItems[dataItemNum];
-			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
-			currentMarker.setIcon(L.icon({iconUrl:this.getIconURL()}));
-			markers.push(currentMarker);
-		}
-		this.layerGroup = L.layerGroup(markers);
+		this.dataSource.getDataItemsWithLatLong(map,this);
 	}
 	
 	return this.layerGroup;
@@ -75,35 +68,39 @@ models.SPARQLDataSource.prototype = Object.create(models.DataSource.prototype);
 models.SPARQLDataSource.constructor = models.SPARQLDataSource;
 
 
-models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(latCol,longCol){
-	this.dataItems = [];
-	var newDataItem = new models.DataItem();
-	newDataItem.latCol = "lat";
-	newDataItem.longCol = "long";
-	newDataItem.lat = 45;
-	newDataItem.long = 5;
-	this.dataItems.push(newDataItem);
-	/*
+models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj){
 	this.promise.then(function (answer){
 		this.sparqlResult = answer.data;
 		var bindings = answer.data.results.bindings;
 		this.promiseResolved = true;
-		
+		markers = [];
+		this.dataItems = [];
 		for (var binding in bindings){
 			currentBind = bindings[binding];
-			var dataItem = new models.DataItem(currentBind[latCol].value,currentBind[longCol].value);
-			for (var col in answer.data.vars){
-				if (answer.data.vars[col] != latCol && answer.data.vars[col] != longCol ){
-					this.dataItems[answer.data.vars[col]] = currentBind[answer.data.vars[col]].value
+			//var dataItem = new models.DataItem(currentBind[confObj.latCol].value,currentBind[confObj.longCol].value);
+			var dataItem = new models.DataItem(confObj.latCol,confObj.longCol);
+			
+			for (var col in answer.data.head.vars){
+				if (answer.data.head.vars[col] != confObj.latCol && answer.data.head.vars[col] != confObj.longCol ){
+					dataItem[answer.data.head.vars[col]] = currentBind[answer.data.head.vars[col]].value;
 				}
 			}
-			this.dataItems.push(dataItem);
+			dataItem[confObj.latCol] = currentBind[confObj.latCol].value;
+			dataItem[confObj.longCol] = currentBind[confObj.longCol].value;
+			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
+
+			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
+
+			markers.push(currentMarker);
+			this.dataItems.push(dataItem); 
 		}
+		confObj.layerGroup = L.layerGroup(markers);
+		confObj.layerGroup.addTo(map);
 	},
 	function (error){
 	
 	});
-	*/
+	
 	return this.dataItems;
 } 
 

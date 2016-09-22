@@ -29,8 +29,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 			if (configObj.dataSource.promiseResolved) {
 				configObj.layerGroup.addTo($rootScope.map);
 			} else {
-				configObj.getLayerGroup();
-				configObj.layerGroup.addTo($rootScope.map);
+				configObj.dataSource.getDataItemsWithLatLong($rootScope.map,configObj);
 			}
 		} else {
 			$rootScope.map.removeLayer(configObj.layerGroup);
