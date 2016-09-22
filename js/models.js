@@ -116,7 +116,7 @@ models.SPARQLDataSource.prototype = Object.create(models.DataSource.prototype);
 models.SPARQLDataSource.constructor = models.SPARQLDataSource;
 
 models.SPARQLDataSource.prototype.getDataItems = function(map,confObj){
-	configObj.dataSource.getDataItemsWithLatLong(map,configObj);
+	confObj.dataSource.getDataItemsWithLatLong(map,confObj);
 }
 
 models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj){

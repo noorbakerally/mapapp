@@ -170,7 +170,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 	var configs = {};
 	
-	/*
+	
 	layerConfig1 = new models.MarkerLayerConfig();
 	layerConfig1.name = "Test1";
 	layerConfig1.color = "FE7569";
@@ -225,7 +225,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	LIMIT 10
 		`;
 	configs["Test2"] = layerConfig2;
-	*/
+	
 
 	layerConfig3 = new models.LayerConfig();
 	layerConfig3.name = "Test3";
