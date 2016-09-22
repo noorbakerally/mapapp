@@ -235,6 +235,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	configs["Test1"]["lat"] = "caplat";
 	configs["Test1"]["long"] = "caplong";
 	configs["Test1"]["desc"] = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
+	configs["Test1"]["layerDesc"] = "Description about Test 1";
 	configs["Test1"]["endpointURL"] = "https://dbpedia.org/sparql";
 	configs["Test1"]["SPARQLQuery"] = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -258,6 +259,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	configs["Test2"]["lat"] = "caplat";
 	configs["Test2"]["long"] = "caplong";
 	configs["Test2"]["desc"] = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
+	configs["Test2"]["layerDesc"] = "Description about Test 2";
 	configs["Test2"]["endpointURL"] = "https://dbpedia.org/sparql";
 	configs["Test2"]["SPARQLQuery"] = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
