@@ -72,9 +72,10 @@ LIMIT 10
 	$scope.sparql_error = false;
 	var sparql_result;
 	var bindings;
+	var data;
 	$scope.query = function (){
 		$scope.sparql_status = false;
-		var data = SPARQLService.query($scope.url,encodeURIComponent($scope.querystr));
+		data = SPARQLService.query($scope.url,encodeURIComponent($scope.querystr));
 		data.then(function (answer){
 			console.log(answer);
 			sparql_result = answer.data;
@@ -93,59 +94,26 @@ LIMIT 10
 		); 
 	};
 	$scope.addGroup = function (){
-		var newConfig = {};
-		newConfig["groupName"] = $scope.groupname;
-		newConfig["lat"] = $scope.lat;
-		newConfig["long"] = $scope.long;
-		newConfig["desc"] = $scope.desc;
-		newConfig["endpointURL"] = $scope.url;
-		newConfig["SPARQLQuery"] = $scope.querystr
+
+		newConfig = new models.MarkerLayerConfig();
+		newConfig.name = $scope.groupname;
+		newConfig.latCol = $scope.lat;
+		newConfig.longCol = $scope.long;
+		newConfig.color = "FFFFFF";
+		newConfig.markerDescription = $scope.desc;
+		newConfig.dataSource = new models.SPARQLDataSource();
+		newConfig.dataSource.url = $scope.url;
+		newConfig.dataSource.query = newConfig.dataSource
+		newConfig.dataSource.promise = data;
+		newConfig.dataSource.promiseResolved = false;
+
 		if ($scope.groupname in $rootScope.config){
 			$scope.sparql_error = true;
 		} else {
 			$rootScope.config[$scope.groupname] = newConfig;
 			$scope.sparql_error = false;
-			$scope.error = "Group name already exists";
-			
+			$scope.error = "Group name already exists, choose a different group name";	
 		}
-
-		//creating the markers
-		markers = [];
-		for (var binding in bindings){
-			currentBind = bindings[binding];
-			var latitude = currentBind[$scope.lat].value;
-			var longitude = currentBind[$scope.long].value;
-			var currentMarker = L.marker([latitude, longitude]);
-			if ($scope.desc.length > 0){
-				str = $scope.desc;
-				ostr = $scope.desc;
-				newStr = "";
-				i=0;l=0;g=0;
-				while (i< ostr.length){
-				   l = str.indexOf("<");
-				   if (l==-1) {
-				     newStr = newStr + str;
-				     break;
-				   };
-				   g = str.indexOf(">");  
-				   partStr = str.substring(l+1,g);
-				   if (partStr in currentBind){
-				   		newStr = newStr + str.substring(0,l) + currentBind[partStr].value;
-					   str = str.substring(g+1,str.length);
-					   i = g;  
-				   } else {
-				   		continue;
-				   }
-				   
-				}
-				console.log(newStr);
-				currentMarker.bindPopup(newStr)
-
-			}
-			markers.push(currentMarker);
-		}
-		$rootScope.layers[$scope.groupname] = L.layerGroup(markers);
-		console.log(L.layerGroup(markers));
 	};
 });
 
