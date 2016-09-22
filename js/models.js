@@ -23,14 +23,14 @@ models.MarkerLayerConfig = function (name,description,color,url,visible,layerGro
 models.MarkerLayerConfig.prototype = Object.create(models.LayerConfig.prototype);
 models.MarkerLayerConfig.constructor = models.MarkerLayerConfig;
 
-models.MarkerLayerConfig.getIconURL = function (){
+models.MarkerLayerConfig.prototype.getIconURL = function (){
 	if (this.url){
 		return this.url;
 	} else {
 		return (this.defaultMarkerURL+this.color);
 	}
 }
-models.MarkerLayerConfig.getLayerGroup = function () {
+models.MarkerLayerConfig.prototype.getLayerGroup = function () {
 	if (this.dataSource.promiseResolved){
 		return this.layerGroup;
 	} else {
@@ -56,6 +56,7 @@ models.DataSource = function(url,sourceContent,promise,promiseResolved,dataItems
 	this.promiseResolved = promiseResolved;
 	this.dataItems = dataItems;
 }
+
 models.DataSource.prototype.showDetails = function (){
 	console.log(this.url);
 };
@@ -70,27 +71,38 @@ models.SPARQLDataSource = function (url,query,sparqlResult){
 models.SPARQLDataSource.prototype = Object.create(models.DataSource.prototype);
 models.SPARQLDataSource.constructor = models.SPARQLDataSource;
 
-models.SPARQLDataSource.getDataItemsWithLatLong = function(latCol,longCol){
+
+models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(latCol,longCol){
+	this.dataItems = [];
+	var newDataItem = new models.DataItem();
+	newDataItem.latCol = "lat";
+	newDataItem.longCol = "long";
+	newDataItem.lat = 45;
+	newDataItem.long = 5;
+	this.dataItems.push(newDataItem);
+	/*
 	this.promise.then(function (answer){
 		this.sparqlResult = answer.data;
 		var bindings = answer.data.results.bindings;
 		this.promiseResolved = true;
-		this.dataItems = [];
+		
 		for (var binding in bindings){
 			currentBind = bindings[binding];
 			var dataItem = new models.DataItem(currentBind[latCol].value,currentBind[longCol].value);
 			for (var col in answer.data.vars){
 				if (answer.data.vars[col] != latCol && answer.data.vars[col] != longCol ){
-					dataItem[answer.data.vars[col]] = currentBind[answer.data.vars[col]].value
+					this.dataItems[answer.data.vars[col]] = currentBind[answer.data.vars[col]].value
 				}
 			}
-			dataItems.push(dataItem);
+			this.dataItems.push(dataItem);
 		}
 	},
 	function (error){
 	
 	});
-}
+	*/
+	
+} 
 
 
 app.models = models;

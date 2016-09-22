@@ -265,8 +265,9 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		newConfig.dataSource.promise = data;
 		newConfig.dataSource.promiseResolved = false;
 		newConfig.visible = false;
+		newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 
 		$rootScope.config[newConfig.name] = newConfig;
-
 	}
+	console.log($rootScope.config);
 });
