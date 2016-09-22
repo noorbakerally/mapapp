@@ -31,17 +31,19 @@ models.MarkerLayerConfig.prototype.getIconURL = function (){
 	}
 }
 models.MarkerLayerConfig.prototype.getLayerGroup = function () {
+	var markers = []
 	if (this.dataSource.promiseResolved){
 		return this.layerGroup;
 	} else {
-		var markers = []
+		this.dataSource.getDataItemsWithLatLong();
 		for (var dataItemNum in this.dataSource.dataItems){
 			var dataItem = this.dataSource.dataItems[dataItemNum];
-			var currentMarker = L.marker([dataItem[latCol], dataItem[longCol]]);
+			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
 			markers.push(currentMarker);
 		}
+		this.layerGroup = L.layerGroup(markers);
 	}
-	this.layerGroup = L.layerGroup(markers);
+	
 	return this.layerGroup;
 }
 models.DataItem = function(latCol,longCol){
@@ -101,7 +103,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(latCol,long
 	
 	});
 	*/
-	
+	return this.dataItems;
 } 
 
 

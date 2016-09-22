@@ -23,47 +23,21 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 
 	
 	$scope.show = function(groupName){
-	
+		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 		var configObj = $rootScope.config[groupName];
 		
-		if (configObj.layerShow){
-			if (configObj["promiseResolved"]) {
-				$rootScope.config[groupName]["layerGroup"].addTo($rootScope.map);
+		
+		if (configObj.visible){
+			if (configObj.dataSource.promiseResolved) {
+				configObj.layerGroup.addTo($rootScope.map);
 			} else {
-				var bindings;
-				var data = configObj["promise"];
-				data.then(function (answer){
-					sparql_result = answer.data;
-					bindings = answer.data.results.bindings;
-					configObj["promiseResolved"] = true;
-					//creating the markers
-					markers = [];
-					for (var binding in bindings){
-						currentBind = bindings[binding];
-						var latitude = currentBind[configObj["lat"]].value;
-						var longitude = currentBind[configObj["long"]].value;
-						var currentMarker = L.marker([latitude, longitude]);
-						currentMarker.bindPopup(Utilities.generateDescription(configObj["desc"],currentBind));
-						var icon;
-						if (configObj.iconURL){
-							icon = L.icon({iconUrl:configObj.iconURL});
-						} else {
-							icon = L.icon({iconUrl:$rootScope.markerURL+configObj.markerColor});
-						}
-						currentMarker.setIcon(icon);
-						markers.push(currentMarker);
-					}
-					$rootScope.config[groupName]["layerGroup"] = L.layerGroup(markers);
-					$rootScope.config[groupName]["layerGroup"].addTo($rootScope.map);
-					$rootScope.config[groupName]["layerShow"] = true;
-				},
-					function (error){
-				}); 
+				//console.log(configObj.getLayerGroup());
+				configObj.getLayerGroup().addTo($rootScope.map);
 			}
 		} else {
-			console.log($rootScope.config[groupName].layerGroup);
-			$rootScope.map.removeLayer($rootScope.config[groupName]["layerGroup"]);
-			$rootScope.config[groupName]["layerShow"] = false;
+			
+			$rootScope.map.removeLayer(configObj.getLayerGroup());
+			configObj.visible = false;
 		}
 
 	}
@@ -265,7 +239,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		newConfig.dataSource.promise = data;
 		newConfig.dataSource.promiseResolved = false;
 		newConfig.visible = false;
-		newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
+
 
 		$rootScope.config[newConfig.name] = newConfig;
 	}
