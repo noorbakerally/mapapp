@@ -1,6 +1,6 @@
 <div ng-controller="GroupViewerController">
 <br/>
-	<div class="list-group pre-scrollable" style = "max-height:70%" ng-repeat="conf in configs">
+	<div class="list-group pre-scrollable" style = "max-height:70%;overflow-y:auto" ng-repeat="conf in configs">
 	  <li class="list-group-item" ng-controller="OneGroupViewerController">
 	  	
 	  	<span class="badge" ng-if="conf.layerGroup">{{conf.layerGroup.getLayers().length}} </span>
