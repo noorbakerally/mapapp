@@ -67,7 +67,13 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 						var longitude = currentBind[configObj["long"]].value;
 						var currentMarker = L.marker([latitude, longitude]);
 						currentMarker.bindPopup(Utilities.generateDescription(configObj["desc"],currentBind));
-
+						var icon;
+						if (configObj.iconURL){
+							icon = L.icon({iconUrl:configObj.iconURL});
+						} else {
+							icon = L.icon({iconUrl:$rootScope.markerURL+configObj.markerColor});
+						}
+						currentMarker.setIcon(icon);
 						markers.push(currentMarker);
 					}
 					$rootScope.config[groupName]["layerGroup"] = L.layerGroup(markers);
@@ -237,6 +243,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	configs["Test1"]["desc"] = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
 	configs["Test1"]["layerDesc"] = "Description about Test 1";
 	configs["Test1"]["endpointURL"] = "https://dbpedia.org/sparql";
+	configs["Test1"]["markerColor"] = "FE7569";
 	configs["Test1"]["SPARQLQuery"] = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 	PREFIX dbo: <http://dbpedia.org/ontology/>
@@ -261,6 +268,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	configs["Test2"]["desc"] = "The latitude and longitude for <country> is <caplat> and <caplong> respectively";
 	configs["Test2"]["layerDesc"] = "Description about Test 2";
 	configs["Test2"]["endpointURL"] = "https://dbpedia.org/sparql";
+	configs["Test2"]["iconURL"] ="/img/tree/tree-24-32.png";
 	configs["Test2"]["SPARQLQuery"] = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 	PREFIX dbo: <http://dbpedia.org/ontology/>
