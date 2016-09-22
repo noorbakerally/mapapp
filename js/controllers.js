@@ -100,13 +100,7 @@ angular.module('myApp').controller('mapController', function($scope,$rootScope) 
 			id: 'bakenoor.1eh9o2c2'
 		}).addTo(mymap);
 	$rootScope.map = mymap;
-	var trees = $scope.models.trees;
-	var trees_layer = L.layerGroup();
-	for (var tree in trees){
-		var new_layer = L.marker([trees[tree].y, trees[tree].x]).bindPopup(trees[tree].code);
-		trees_layer.addLayer(new_layer)
-	}
-	trees_layer.addTo(mymap);
+	
 });
 
 
@@ -209,16 +203,7 @@ LIMIT 10
 });
 
 angular.module('myApp').controller('initController', function($scope,$rootScope,SPARQLService,Utilities) {
-	var trees = [
-	{"y": 45.1652431769592, "x": 5.70811860693185, "code":"ESP29897"},
-	{"y": 45.1973657781335, "x": 5.73650327568813, "code":"ESP22846"},
-	{"y": 45.1632157003004, "x": 5.70689524375785, "code":"ESP29895"},
-	{"y": 45.1675250918395, "x": 5.70349725176202, "code":"ESP29893"}];
-
-	$scope.models = {};
-	$scope.models["trees"] = trees;
-
-
+	
 	/*
 		- group name
 		- item type
