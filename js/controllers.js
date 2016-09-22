@@ -11,7 +11,20 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 		}
 	}
 });
-angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,Utilities) {
+angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,$location,Utilities) {
+	
+
+	//showing or hiding the checkbox for showing the layers on the map
+	// let it be true for now
+	$scope.showhide = true;
+	/*
+	$scope.showhide = false;
+	
+	if ($location.url() == "/"){
+		$scope.showhide = true;
+	}
+	*/
+
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
 	$scope.show = function(groupName){
@@ -62,22 +75,13 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 					$rootScope.config[groupName]["layerShow"] = true;
 				},
 					function (error){
-
 				}); 
-
 			}
-			
-			
 		} else {
 			console.log($rootScope.config[groupName].layerGroup);
 			$rootScope.map.removeLayer($rootScope.config[groupName]["layerGroup"]);
 			$rootScope.config[groupName]["layerShow"] = false;
 		}
-
-		
-    
-		
-
 
 	}
 
