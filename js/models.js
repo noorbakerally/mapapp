@@ -2,6 +2,53 @@ var app = angular.module('myApp');
 
 
 models = {};
+
+models.Map = function (latitude,longitude,zoomLevel,mapObj){
+	this.latitude = latitude;
+	this.longitude = longitude;
+	this.zoomLevel = zoomLevel;	
+	this.mapObj = mapObj;
+}
+
+models.MapBoxMap = function (latitude,longitude,zoomLevel,maxZoom,accessToken,userId){
+	models.Map.call(this);
+	this.latitude = latitude;
+	this.longitude = longitude;
+	this.zoomLevel = zoomLevel;	
+	this.maxZoom = maxZoom;
+	this.tileURL = "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}";
+	this.accessToken = accessToken;
+	this.userId = userId;
+}
+
+models.MapBoxMap.prototype = Object.create(models.Map.prototype);
+models.MapBoxMap.constructor = models.MapBoxMap;
+
+models.MapBoxMap.prototype.loadMap = function (){
+	
+	var mymap = L.map('mapid').setView([this.latitude, this.longitude], this.zoomLevel);
+	L.tileLayer(this.tileURL, {
+		maxZoom: this.maxZoom,
+		accessToken:this.accessToken,
+		id: this.userId
+	}).addTo(mymap);
+	this.mapObj = mymap;
+}
+
+models.GoogleMap = function (mode){
+	this.mode = mode;
+}
+
+models.GoogleMap.prototype = Object.create(models.Map.prototype);
+models.GoogleMap.constructor = models.GoogleMap;
+
+models.GoogleMap.prototype.loadMap = function (){
+	var mymap = new L.Map('mapid', {center: new L.LatLng(51.51, -0.11), zoom: 9});
+    var googleLayer = new L.Google('ROADMAP');
+    mymap.addLayer(googleLayer);
+    this.mapObj = mymap;
+}
+
 models.LayerConfig = function (name,description,color,url,visible,layerGroup,dataSource){
 	this.name = name;
 	this.description = description;

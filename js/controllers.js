@@ -42,6 +42,8 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 });
 
 angular.module('myApp').controller('mapController', function($scope,$rootScope) {
+
+	/*
 	var mymap = L.map('mapid').setView([45.1, 5.7], 3);
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		maxZoom: 18,
@@ -49,7 +51,8 @@ angular.module('myApp').controller('mapController', function($scope,$rootScope) 
 		id: 'bakenoor.1eh9o2c2'
 	}).addTo(mymap);
 	$rootScope.map = mymap;
-	
+	*/
+
 });
 
 
@@ -141,6 +144,21 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
 	var configurationRequest = $http.get("http://localhost:8000/js/conf.js");
 	configurationRequest.then(function (dataConf){
+
+		//processing the map configs
+		var mapConfig = dataConf.data.AppConf.mapConf;
+		
+		var mapBox = new models.MapBoxMap(mapConfig.mapView.latitude,mapConfig.mapView.longitude,mapConfig.mapView.zoomLevel
+			,mapConfig.mapView.maxZoom,mapConfig.mapProvider.MapBox.accessToken,mapConfig.mapProvider.MapBox.userId);
+		
+		mapBox.loadMap();
+
+
+		$rootScope.map = mapBox.mapObj;
+
+
+
+		//processing the data configs
 		var configs = dataConf.data.DataConf;
 		for (var config in configs ){
 			var newConfig = configs[config];
@@ -176,6 +194,10 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 			newLayerConfig.dataSource.promiseResolved = false;
 			newLayerConfig.visible = false;
 
+			
+			if (newConfig.initialShow){
+				newLayerConfig.dataSource.getDataItems($rootScope.map,newLayerConfig);
+			}
 
 			$rootScope.config[newConfig.name] = newLayerConfig;
 		}
