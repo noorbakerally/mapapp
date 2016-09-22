@@ -39,6 +39,7 @@ models.MarkerLayerConfig.prototype.getLayerGroup = function () {
 		for (var dataItemNum in this.dataSource.dataItems){
 			var dataItem = this.dataSource.dataItems[dataItemNum];
 			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
+			currentMarker.setIcon(L.icon({iconUrl:this.getIconURL()}));
 			markers.push(currentMarker);
 		}
 		this.layerGroup = L.layerGroup(markers);

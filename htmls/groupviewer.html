@@ -3,10 +3,15 @@
 	<div class="list-group pre-scrollable" style = "max-height:70%;overflow-y:auto" ng-repeat="conf in configs">
 	  <li class="list-group-item" ng-controller="OneGroupViewerController">
 	  	
-	  	<span class="badge" ng-if="conf.layerGroup">{{conf.layerGroup.getLayers().length}} </span>
-
-	    <h4 class="list-group-item-heading">{{conf.name}}<img src="{{conf.getIconURL}}" style="height:32p"/></h4>
-	    <div>{{conf.description}}</div>
+	  	<div>
+	  		<div style="float:left"><h4 class="list-group-item-heading">{{conf.name}}</h4></div>
+	  		<div style="float:right">
+	  			<img src="{{conf.getIconURL()}}" style="height:32p"/>
+	  			<span class="badge" ng-if="conf.layerGroup">{{conf.layerGroup.getLayers().length}} </span>
+	  		</div>
+	  	</div>
+	    <br/>
+	    {{conf.description}}
 	    <div class="checkbox" ng-show="showhide" >
 	  		<label><input type="checkbox" ng-change="show(conf.name)" ng-model="conf.visible">Show</label>
 		</div>

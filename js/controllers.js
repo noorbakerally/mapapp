@@ -25,16 +25,12 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.show = function(groupName){
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 		var configObj = $rootScope.config[groupName];
-		
-		
 		if (configObj.visible){
 			if (configObj.dataSource.promiseResolved) {
 				configObj.layerGroup.addTo($rootScope.map);
 			} else {
-				//console.log(configObj.getLayerGroup());
 				configObj.getLayerGroup();
 				configObj.layerGroup.addTo($rootScope.map);
-				
 			}
 		} else {
 			$rootScope.map.removeLayer(configObj.layerGroup);
