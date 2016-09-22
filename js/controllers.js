@@ -27,6 +27,17 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
+
+	$scope.icon = function (obj){
+		var url;
+		if (obj.iconURL){
+			url = obj.iconURL;
+		} else {
+			url = $rootScope.markerURL+obj.markerColor;
+		}
+		return url;
+	};
+
 	$scope.show = function(groupName){
 	
 		/*
@@ -269,7 +280,6 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	ORDER BY ?country
 	LIMIT 10
 		`;
-
 
 
 	for (var config in configs ){

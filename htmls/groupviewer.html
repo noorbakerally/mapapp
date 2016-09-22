@@ -5,7 +5,7 @@
 	  	
 	  	<span class="badge" ng-if="conf.layerGroup">{{conf.layerGroup.getLayers().length}} </span>
 
-	    <h4 class="list-group-item-heading">{{conf.groupName}}</h4>
+	    <h4 class="list-group-item-heading">{{conf.groupName}}<img src="{{icon(conf)}}" style="height:32p"/></h4>
 	    <div>{{conf.layerDesc}}</div>
 	    <div class="checkbox" ng-show="showhide" >
 	  		<label><input type="checkbox" ng-change="show(conf.groupName)" ng-model="conf.layerShow">Show</label>
