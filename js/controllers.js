@@ -142,7 +142,8 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	
 	
 	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
-	var configurationRequest = $http.get("http://localhost:8000/js/conf.js");
+	//http://localhost:8000/js/conf.js
+	var configurationRequest = $http.get("https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js");
 	configurationRequest.then(function (dataConf){
 
 		//processing the map configs
