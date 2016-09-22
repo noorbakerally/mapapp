@@ -136,10 +136,11 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 	*/
 	
-
-	var configurationRequest = $http.get("https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js");
+	
+	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
+	var configurationRequest = $http.get("http://localhost:8000/js/conf.js");
 	configurationRequest.then(function (dataConf){
-		var configs = dataConf.data;
+		var configs = dataConf.data.DataConf;
 		for (var config in configs ){
 			var newConfig = configs[config];
 			var newLayerConfig;
@@ -178,4 +179,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 			$rootScope.config[newConfig.name] = newLayerConfig;
 		}
 	});	
+
+
+
 });
