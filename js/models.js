@@ -48,7 +48,7 @@ models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) 
 		newLayerConfig.longCol = newConfig.longCol;
 		newLayerConfig.markerDescription = newConfig.markerDescription;
 	}
-
+	
 	newLayerConfig.name = newConfig.name;
 	newLayerConfig.description = newConfig.description;
 

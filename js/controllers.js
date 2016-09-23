@@ -2,7 +2,7 @@ var models = angular.module('myApp').models;
 
 
 
-angular.module('myApp').controller('DataConfModalController', function ($scope, $uibModalInstance) {
+angular.module('myApp').controller('DataConfModalController', function ($scope, $rootScope,$http,$uibModalInstance,SPARQLService) {
 	$scope.test = "tst";
 
 	$scope.cancel = function () {
@@ -10,6 +10,23 @@ angular.module('myApp').controller('DataConfModalController', function ($scope, 
 	};
 
 	$scope.loadDataConfig = function () {
+		if ($scope.url && $scope.url.length >0){
+			var configurationRequest = $http.get($scope.url);
+			configurationRequest.then(function (dataConf){
+				var newConfigs = dataConf.data;
+				for (var config in newConfigs){
+					var newConfig = newConfigs[config];
+					$rootScope.config[newConfig.name] = $rootScope.mapObj.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
+				}
+			});
+
+		} else {
+			var newConfigs = JSON.parse($scope.content);
+			for (var config in newConfigs){
+				var newConfig = newConfigs[config];
+				$rootScope.config[newConfig.name] = $rootScope.mapObj.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
+			}
+		}
 		$uibModalInstance.dismiss('cancel');
 	};
 
@@ -207,7 +224,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		
 		mapBox.loadMap();
 
-
+		$rootScope.mapObj = mapBox;
 		$rootScope.map = mapBox.mapObj;
 		
 		var i = 0;
