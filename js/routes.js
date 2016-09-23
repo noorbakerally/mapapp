@@ -1,6 +1,6 @@
 angular.module('myApp').config(function($routeProvider) {
   $routeProvider
-  .when("/", {
+  .when("/:configURI?", {
     templateUrl : "htmls/main.html"
   })
   .when("/layers", {

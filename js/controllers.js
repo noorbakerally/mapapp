@@ -122,7 +122,7 @@ LIMIT 10
 	};
 });
 
-angular.module('myApp').controller('initController', function($scope,$rootScope,$http,SPARQLService,Utilities) {
+angular.module('myApp').controller('initController', function($scope,$rootScope,$http,$routeParams,SPARQLService,Utilities) {
 	
 	/*
 		- group name
@@ -139,7 +139,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		- group type
 
 	*/
-	
+	console.log($routeParams);
 	
 	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
 	//http://localhost:8000/js/conf.js
@@ -198,6 +198,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 			
 			if (newConfig.initialShow){
 				newLayerConfig.dataSource.getDataItems($rootScope.map,newLayerConfig);
+				newLayerConfig.visible = true;
 			}
 
 			$rootScope.config[newConfig.name] = newLayerConfig;
