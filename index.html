@@ -1,10 +1,10 @@
-<html lang="en-US">
+<html lang="en-US" ng-app="myApp">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="http://getbootstrap.com/examples/dashboard/dashboard.css">
 	<link rel="stylesheet" href="css/app.css">
      
 
-     <nav class="navbar navbar-inverse navbar-fixed-top">
+     <nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="DropdownCtrl">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
 	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -18,17 +18,44 @@
 	    <div id="navbar" class="navbar-collapse collapse">
 	      <ul class="nav navbar-nav navbar-right">
 	        <li><a href="#/">Map</a></li>
-	        <li><a href="#/layers">Layers</a></li>
-	        <li><a href="#">Help</a></li>
+	        <!--li><a href="#/layers">Layers</a></li-->
+
+	        <li uib-dropdown on-toggle="toggled(open)" ng-mouseover="status.isopen = true" is-open="status.isopen" ng-mouseleave="status.isopen = false">
+		      <a href id="simple-dropdown" uib-dropdown-toggle>Actions<span class="caret"></span></a>
+		      <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+		        <li>
+		          <a href ng-click="addDataConfiguration()">Add Data Configuration</a>
+		        </li>
+		      </ul>
+		    </li>
+
+		    <li><a href="#">Help</a></li>
+
 	      </ul>
 
 	    </div>
 	  </div>
 	</nav>
+	</div>
 
-	<div ng-app="myApp">
+
+	<div>
 		<div ng-view></div>
 	</div>
+
+
+	<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">Add Data Configuration</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            {{test}}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="loadDataConfig()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
 
 	<!--Leaflet-->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />

@@ -1,5 +1,42 @@
 var models = angular.module('myApp').models;
 
+
+
+angular.module('myApp').controller('DataConfModalController', function ($scope, $uibModalInstance) {
+	$scope.test = "tst";
+
+	$scope.cancel = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+	$scope.loadDataConfig = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+});
+angular.module('myApp').controller('DropdownCtrl', function ($scope, $log,$uibModal) {
+	$scope.test="test";
+  
+	$scope.addDataConfiguration = function (){
+		console.log("test");
+		var modalInstance = $uibModal.open({templateUrl: 'myModalContent.html',controller: 'DataConfModalController'});
+	};
+  
+  $scope.status = {
+    isopen: false
+  };
+
+  
+
+  $scope.toggleDropdown = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    $scope.status.isopen = !$scope.status.isopen;
+  };
+
+  $scope.appendToEl = angular.element(document.querySelector('#dropdown-long-content'));
+});
+
 angular.module('myApp').controller('GroupViewerController', function($scope,$rootScope) {
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
