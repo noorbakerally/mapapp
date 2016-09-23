@@ -163,45 +163,10 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		var configs = dataConf.data.DataConf;
 		for (var config in configs ){
 			var newConfig = configs[config];
-			var newLayerConfig;
-
-			if (newConfig.type == "LayerConfig"){
-				newLayerConfig = new models.LayerConfig();
-			} else if (newConfig.type == "MarkerLayerConfig"){
-				newLayerConfig = new models.MarkerLayerConfig();
-				if (newConfig.color){
-					newLayerConfig.color = newConfig.color;
-				} else {
-					newLayerConfig.url = newConfig.url;
-				}
-				newLayerConfig.latCol = newConfig.latCol;
-				newLayerConfig.longCol = newConfig.longCol;
-				newLayerConfig.markerDescription = newConfig.markerDescription;
-			}
-
-			newLayerConfig.name = newConfig.name;
-			newLayerConfig.description = newConfig.description;
-
-			if (newConfig.dataSource.type == "GeoJSONDataSource"){
-				newLayerConfig.dataSource = new models.GeoJSONDataSource();
-			} else if (newConfig.dataSource.type == "SPARQLDataSource"){
-				newLayerConfig.dataSource = new models.SPARQLDataSource();
-				newLayerConfig.dataSource.query = newConfig.dataSource.query;
-			}
-			newLayerConfig.dataSource.url = newConfig.dataSource.url;
-
-			var data = SPARQLService.query(newConfig.dataSource.url,encodeURIComponent(newConfig.dataSource.query));
-			newLayerConfig.dataSource.promise = data;
-			newLayerConfig.dataSource.promiseResolved = false;
-			newLayerConfig.visible = false;
-
 			
-			if (newConfig.initialShow){
-				newLayerConfig.dataSource.getDataItems($rootScope.map,newLayerConfig);
-				newLayerConfig.visible = true;
-			}
 
-			$rootScope.config[newConfig.name] = newLayerConfig;
+
+			$rootScope.config[newConfig.name] = mapBox.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
 		}
 	});	
 
