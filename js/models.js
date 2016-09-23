@@ -24,7 +24,6 @@ models.MapBoxMap.prototype = Object.create(models.Map.prototype);
 models.MapBoxMap.constructor = models.MapBoxMap;
 
 models.MapBoxMap.prototype.loadMap = function (){
-	
 	var mymap = L.map('mapid').setView([this.latitude, this.longitude], this.zoomLevel);
 	L.tileLayer(this.tileURL, {
 		maxZoom: this.maxZoom,

@@ -145,16 +145,16 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	//http://localhost:8000/js/conf.js
 
 	// a default appConfURI
-	var appConfURI = "";
+	var appConfURI = "https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/app.conf";
 	if ($routeParams.appConfURI){
 		appConfURI = $routeParams.appConfURI;
 	}
 
 	// for all default dataConfURIs
-	var dataConfURIs = [];
-	if ($routeParams.dataConfURI.constructor == Array){
+	var dataConfURIs = ["https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data1.conf"];
+	if ($routeParams.dataConfURI && $routeParams.dataConfURI.constructor == Array){
 		dataConfURIs = dataConfURIs.concat($routeParams.dataConfURI);
-	} else {
+	} else if ($routeParams.dataConfURI){
 		dataConfURIs.push($routeParams.dataConfURI);
 	}
 	
@@ -188,9 +188,4 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		}
 			
 	});	
-
-
-
-
-
 });
