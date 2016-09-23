@@ -214,10 +214,10 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	
 
 	var configurationRequest = $http.get(appConfURI);
-	configurationRequest.then(function (dataConf){
+	configurationRequest.then(function (appConf){
 
 		//processing the map configs
-		var mapConfig = dataConf.data.AppConf.mapConf;
+		var mapConfig = appConf.data.AppConf.mapConf;
 		
 		var mapBox = new models.MapBoxMap(mapConfig.mapView.latitude,mapConfig.mapView.longitude,mapConfig.mapView.zoomLevel
 			,mapConfig.mapView.maxZoom,mapConfig.mapProvider.MapBox.accessToken,mapConfig.mapProvider.MapBox.userId);
