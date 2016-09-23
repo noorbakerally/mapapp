@@ -143,7 +143,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	
 	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
 	//http://localhost:8000/js/conf.js
-	var configurationRequest = $http.get("https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js");
+	var configurationRequest = $http.get("http://localhost:8000/js/app.conf");
 	configurationRequest.then(function (dataConf){
 
 		//processing the map configs
@@ -156,18 +156,21 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 
 		$rootScope.map = mapBox.mapObj;
-
-
-
-		//processing the data configs
-		var configs = dataConf.data.DataConf;
-		for (var config in configs ){
-			var newConfig = configs[config];
-			
-
-
-			$rootScope.config[newConfig.name] = mapBox.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
+		
+		var i = 1;
+		while (i<3){
+			var dataConfReq = $http.get("http://localhost:8000/js/data"+i+".conf");
+			dataConfReq.then(function (data){
+				//processing the data configs
+				var configs = data.data;
+				for (var config in configs ){
+					var newConfig = configs[config];
+					$rootScope.config[newConfig.name] = mapBox.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
+				} 
+			});
+			i++;
 		}
+			
 	});	
 
 

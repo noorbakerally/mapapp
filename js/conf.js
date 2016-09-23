@@ -1,1 +1,0 @@
-../../EGC2017ConfigurationFile/conf.js
