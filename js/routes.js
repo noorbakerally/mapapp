@@ -1,6 +1,6 @@
 angular.module('myApp').config(function($routeProvider) {
   $routeProvider
-  .when("/:configURI?", {
+  .when("/:appConfURI?/:dataConfURI?", {
     templateUrl : "htmls/main.html"
   })
   .when("/layers", {

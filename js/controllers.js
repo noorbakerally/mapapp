@@ -143,7 +143,23 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	
 	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
 	//http://localhost:8000/js/conf.js
-	var configurationRequest = $http.get("http://localhost:8000/js/app.conf");
+
+	// a default appConfURI
+	var appConfURI = "";
+	if ($routeParams.appConfURI){
+		appConfURI = $routeParams.appConfURI;
+	}
+
+	// for all default dataConfURIs
+	var dataConfURIs = [];
+	if ($routeParams.dataConfURI.constructor == Array){
+		dataConfURIs = dataConfURIs.concat($routeParams.dataConfURI);
+	} else {
+		dataConfURIs.push($routeParams.dataConfURI);
+	}
+	
+
+	var configurationRequest = $http.get(appConfURI);
 	configurationRequest.then(function (dataConf){
 
 		//processing the map configs
@@ -157,9 +173,9 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 
 		$rootScope.map = mapBox.mapObj;
 		
-		var i = 1;
-		while (i<3){
-			var dataConfReq = $http.get("http://localhost:8000/js/data"+i+".conf");
+		var i = 0;
+		while (i<dataConfURIs.length){
+			var dataConfReq = $http.get(dataConfURIs[i]);
 			dataConfReq.then(function (data){
 				//processing the data configs
 				var configs = data.data;
@@ -172,6 +188,8 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		}
 			
 	});	
+
+
 
 
 
