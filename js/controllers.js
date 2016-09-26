@@ -58,7 +58,7 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
 	$scope.updateVar = {};
-  	$scope.updateVar.selectedObject = "test"
+  	$scope.updateVar.selectedObject = null;
 });
 
 angular.module('myApp').controller('oneGroupItemsController', function($scope,$rootScope) {
@@ -66,12 +66,18 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 		var keys = Object.keys($scope.$parent.updateVar.columnVal);
 		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
 			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
+			var showItem = true;
 			for (var key in keys){
+				
 				var currentColumn = $scope.$parent.updateVar.columnVal[keys[key]];
 				if (currentColumn != "none" && currentDateItem[keys[key]] != currentColumn){
-					currentDateItem.show(false,$rootScope.map);
+					showItem = false;
+					break;
+				} else {
+					showItem = true;
 				}
 			} 
+			currentDateItem.show(showItem,$rootScope.map);
 		}
 	}
 
@@ -82,9 +88,6 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 			currentDateItem.show(true,$rootScope.map);
 		}
 	}
-
-
-
 });
 
 angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,$location,Utilities) {
@@ -108,7 +111,10 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.$parent.selectedObject = "test2";
 
 	$scope.showDetails = function (groupName){
-		console.log($scope.configs[groupName]);
+		if ($scope.$parent.updateVar.selectedObject && $scope.$parent.updateVar.selectedObject.name == groupName){
+			$scope.$parent.updateVar.selectedObject = null;
+			return;
+		}
 		$scope.$parent.updateVar.selectedObject = $scope.configs[groupName];
 		$scope.$parent.updateVar.columnVal = {};
 		$scope.$parent.updateVar.cols = Object.keys($scope.$parent.updateVar.selectedObject.cols);
