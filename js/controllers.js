@@ -62,10 +62,29 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 });
 
 angular.module('myApp').controller('oneGroupItemsController', function($scope,$rootScope) {
-	$scope.columnVal = {};
 	$scope.applyFilter = function (){
-		console.log($scope.$parent.updateVar.columnVal);
+		var keys = Object.keys($scope.$parent.updateVar.columnVal);
+		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
+			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
+			for (var key in keys){
+				var currentColumn = $scope.$parent.updateVar.columnVal[keys[key]];
+				if (currentColumn != "none" && currentDateItem[keys[key]] != currentColumn){
+					currentDateItem.show(false,$rootScope.map);
+				}
+			} 
+		}
 	}
+
+	$scope.clearFilter = function (){
+		
+		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
+			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
+			currentDateItem.show(true,$rootScope.map);
+		}
+	}
+
+
+
 });
 
 angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,$location,Utilities) {

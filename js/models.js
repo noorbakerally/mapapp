@@ -130,6 +130,14 @@ models.DataItem = function(latCol,longCol){
 	this.latCol = latCol;
 	this.longCol = longCol;
 }
+models.DataItem.prototype.show = function (visible,mapObj){
+	if (visible){
+		mapObj.addLayer(this.marker);
+	} else {
+		mapObj.removeLayer(this.marker);
+	}
+}
+
 models.DataItem.prototype.getDescription = function(desc){
 	if (desc.length > 0){
 		str = desc;
