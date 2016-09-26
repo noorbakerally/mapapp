@@ -62,15 +62,16 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 });
 
 angular.module('myApp').controller('oneGroupItemsController', function($scope,$rootScope) {
-
+	$scope.columnVal = {};
+	$scope.applyFilter = function (){
+		console.log($scope.$parent.updateVar.columnVal);
+	}
 });
 
 angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,$location,Utilities) {
 	
 
-	$scope.change = function (){
-       $scope.$parent.selectedObject = "test2";
-  }
+
 
 	//showing or hiding the checkbox for showing the layers on the map
 	// let it be true for now
@@ -90,6 +91,8 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.showDetails = function (groupName){
 		console.log($scope.configs[groupName]);
 		$scope.$parent.updateVar.selectedObject = $scope.configs[groupName];
+		$scope.$parent.updateVar.columnVal = {};
+		$scope.$parent.updateVar.cols = Object.keys($scope.$parent.updateVar.selectedObject.cols);
 	};
 	
 	$scope.show = function(groupName){
