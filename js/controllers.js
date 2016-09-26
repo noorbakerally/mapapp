@@ -66,12 +66,18 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 		var keys = Object.keys($scope.$parent.updateVar.columnVal);
 		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
 			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
+			var showItem = true;
 			for (var key in keys){
+				
 				var currentColumn = $scope.$parent.updateVar.columnVal[keys[key]];
 				if (currentColumn != "none" && currentDateItem[keys[key]] != currentColumn){
-					currentDateItem.show(false,$rootScope.map);
+					showItem = false;
+					break;
+				} else {
+					showItem = true;
 				}
 			} 
+			currentDateItem.show(showItem,$rootScope.map);
 		}
 	}
 
@@ -82,9 +88,6 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 			currentDateItem.show(true,$rootScope.map);
 		}
 	}
-
-
-
 });
 
 angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,$location,Utilities) {
