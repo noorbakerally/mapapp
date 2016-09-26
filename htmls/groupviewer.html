@@ -1,21 +1,20 @@
 <div ng-controller="GroupViewerController">
-<br/>
-	<div class="list-group pre-scrollable" style = "max-height:70%;overflow-y:auto" ng-repeat="conf in configs">
-	  <li class="list-group-item" ng-controller="OneGroupViewerController">
-	  	
-	  	<div>
-	  		<div style="float:left"><h4 class="list-group-item-heading">{{conf.name}}</h4></div>
-	  		<div style="float:right">
-	  			<img src="{{conf.getIconURL()}}" style="height:32p"/>
-	  			<span class="badge" ng-if="conf.layerGroup">{{conf.layerGroup.getLayers().length}} </span>
-	  		</div>
-	  	</div>
-	    <br/>
-	    <div style="float:clear">{{conf.description}}</div>
-	    <div class="checkbox" ng-show="showhide" >
-	  		<label><input type="checkbox" ng-change="show(conf.name)" ng-model="conf.visible">Show</label>
-		</div>
-	  </li>
+	{{selectedObject}}
+	<table ng-table ="usersTable" class="table table-striped">
+		<tr ng-repeat="conf in configs" ng-controller="OneGroupViewerController">
+			<td data-title="'Name'">{{conf.name}} </td>
+			<td data-title="'Items'">{{conf.dataItems.length}}</td>
+			<td data-title="'Show/Hide'"><input type="checkbox" ng-change="show(conf.name)" ng-model="conf.visible"></td>
+			<td data-title=""><button ng-click="showDetails(conf.name)"><span class="glyphicon glyphicon-search"></span></button></td>
+		</tr>
+	</table>
 
+	<div ng-controller="oneGroupItemsController">
+		<div><h3>{{$parent.updateVar.selectedObject.name}}</h3></div>
+		<div>
+			<div>{{$parent.updateVar.selectedObject.description}}</div>
+			<div></div>
+		</div>
 	</div>
 </div>
+

@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngRoute','ui.bootstrap']);
+var app = angular.module('myApp', ['ngRoute','ui.bootstrap','ngTable']);
 app.run(function($rootScope) {
     $rootScope.config = {};
     $rootScope.layers = {};

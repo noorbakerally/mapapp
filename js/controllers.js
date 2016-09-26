@@ -54,12 +54,23 @@ angular.module('myApp').controller('DropdownCtrl', function ($scope, $log,$uibMo
   $scope.appendToEl = angular.element(document.querySelector('#dropdown-long-content'));
 });
 
-angular.module('myApp').controller('GroupViewerController', function($scope,$rootScope) {
+angular.module('myApp').controller('GroupViewerController', function($scope,$rootScope,NgTableParams,$filter) {
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
+	$scope.updateVar = {};
+  	$scope.updateVar.selectedObject = "test"
 });
+
+angular.module('myApp').controller('oneGroupItemsController', function($scope,$rootScope) {
+
+});
+
 angular.module('myApp').controller('OneGroupViewerController', function($scope,$rootScope,$location,Utilities) {
 	
+
+	$scope.change = function (){
+       $scope.$parent.selectedObject = "test2";
+  }
 
 	//showing or hiding the checkbox for showing the layers on the map
 	// let it be true for now
@@ -74,7 +85,11 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
+	$scope.$parent.selectedObject = "test2";
 
+	$scope.showDetails = function (groupName){
+		$scope.$parent.updateVar.selectedObject = $scope.configs[groupName];
+	};
 	
 	$scope.show = function(groupName){
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
@@ -205,7 +220,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	}
 
 	// for all default dataConfURIs
-	var dataConfURIs = ["https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data1.conf"];
+	var dataConfURIs = ["https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data2.conf"];
 	if ($routeParams.dataConfURI && $routeParams.dataConfURI.constructor == Array){
 		dataConfURIs = dataConfURIs.concat($routeParams.dataConfURI);
 	} else if ($routeParams.dataConfURI){

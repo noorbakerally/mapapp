@@ -205,13 +205,15 @@ models.SPARQLDataSource.prototype.getDataItems = function(map,confObj){
 }
 
 models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj){
+
 	this.promise.then(function (answer){
+		confObj.dataItems = [];
+		confObj.cols = {};
 		this.sparqlResult = answer.data;
 		console.log(answer);
 		var bindings = answer.data.results.bindings;
 		this.promiseResolved = true;
 		markers = [];
-		this.dataItems = [];
 		for (var binding in bindings){
 			currentBind = bindings[binding];
 			//var dataItem = new models.DataItem(currentBind[confObj.latCol].value,currentBind[confObj.longCol].value);
@@ -220,6 +222,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			for (var col in answer.data.head.vars){
 				if (answer.data.head.vars[col] != confObj.latCol && answer.data.head.vars[col] != confObj.longCol ){
 					dataItem[answer.data.head.vars[col]] = currentBind[answer.data.head.vars[col]].value;
+					
 				}
 			}
 			dataItem[confObj.latCol] = currentBind[confObj.latCol].value;
@@ -233,10 +236,11 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			}
 
 			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
-
+			dataItem.marker = currentMarker;
 			markers.push(currentMarker);
-			this.dataItems.push(dataItem); 
+			confObj.dataItems.push(dataItem); 
 		}
+		console.log(confObj.dataItems);
 		confObj.layerGroup = L.layerGroup(markers);
 		confObj.layerGroup.addTo(map);
 	},
@@ -244,7 +248,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 	
 	});
 	
-	return this.dataItems;
+	return confObj.dataItems;
 } 
 
 
