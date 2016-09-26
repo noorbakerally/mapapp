@@ -58,7 +58,7 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 	$scope.configs = $rootScope.config;
 	$scope.layers = $rootScope.layers;
 	$scope.updateVar = {};
-  	$scope.updateVar.selectedObject = "test"
+  	$scope.updateVar.selectedObject = null;
 });
 
 angular.module('myApp').controller('oneGroupItemsController', function($scope,$rootScope) {
@@ -108,7 +108,10 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.$parent.selectedObject = "test2";
 
 	$scope.showDetails = function (groupName){
-		console.log($scope.configs[groupName]);
+		if ($scope.$parent.updateVar.selectedObject && $scope.$parent.updateVar.selectedObject.name == groupName){
+			$scope.$parent.updateVar.selectedObject = null;
+			return;
+		}
 		$scope.$parent.updateVar.selectedObject = $scope.configs[groupName];
 		$scope.$parent.updateVar.columnVal = {};
 		$scope.$parent.updateVar.cols = Object.keys($scope.$parent.updateVar.selectedObject.cols);
