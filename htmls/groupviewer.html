@@ -3,10 +3,10 @@
 	<table ng-table ="usersTable" class="table table-striped">
 		<tr ng-repeat="conf in configs" ng-controller="OneGroupViewerController">
 			<td data-title="'Name'">{{conf.name}} </td>
-			<td data-title="'Name'"><img src="{{conf.getIconURL() }}" style="height:32px"> </td>
+			<td data-title="'Name'"><img src="{{conf.getIconURL() }}" style="height:20px"> </td>
 			<td data-title="'Items'">{{conf.dataItems.length}}</td>
 			<td data-title="'Show/Hide'"><input type="checkbox" ng-change="show(conf.name)" ng-model="conf.visible"></td>
-			<td data-title=""><button ng-click="showDetails(conf.name)"><span class="glyphicon glyphicon-search"></span></button></td>
+			<td data-title=""><button ng-click="showDetails(conf.name)"><span class="glyphicon glyphicon-eye-open"></span></button></td>
 		</tr>
 	</table>
 
