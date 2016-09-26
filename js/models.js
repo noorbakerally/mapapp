@@ -222,7 +222,14 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			for (var col in answer.data.head.vars){
 				if (answer.data.head.vars[col] != confObj.latCol && answer.data.head.vars[col] != confObj.longCol ){
 					dataItem[answer.data.head.vars[col]] = currentBind[answer.data.head.vars[col]].value;
-					
+
+					if (confObj.cols[answer.data.head.vars[col]]){
+						if (confObj.cols[answer.data.head.vars[col]].indexOf(currentBind[answer.data.head.vars[col]].value) == -1){
+							confObj.cols[answer.data.head.vars[col]].push(currentBind[answer.data.head.vars[col]].value);
+						}
+					} else {
+						confObj.cols[answer.data.head.vars[col]] = [];
+					}
 				}
 			}
 			dataItem[confObj.latCol] = currentBind[confObj.latCol].value;

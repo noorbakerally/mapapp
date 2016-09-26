@@ -88,6 +88,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.$parent.selectedObject = "test2";
 
 	$scope.showDetails = function (groupName){
+		console.log($scope.configs[groupName]);
 		$scope.$parent.updateVar.selectedObject = $scope.configs[groupName];
 	};
 	
