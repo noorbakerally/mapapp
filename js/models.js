@@ -35,8 +35,11 @@ models.MapBoxMap.prototype.loadMap = function (){
 
 models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) {
 	var newLayerConfig;
-	if (newConfig.type == "LayerConfig"){
+	if (newConfig.type == "GeoJSONLayerConfig"){
 		newLayerConfig = new models.LayerConfig();
+		if (newConfig.geoJSONLayerOptions){
+			newLayerConfig.geoJSONLayerOptions = newConfig.geoJSONLayerOptions;
+		}
 	} else if (newConfig.type == "MarkerLayerConfig"){
 		newLayerConfig = new models.MarkerLayerConfig();
 		if (newConfig.color){
@@ -191,7 +194,11 @@ models.GeoJSONDataSource.constructor = models.GeoJSONDataSource;
 models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 	this.promise.then(function (answer){
 		var geoJSONObject = answer.data;
-		confObj.layerGroup = L.geoJson(geoJSONObject);
+		var options = {};
+		if (confObj.geoJSONLayerOptions){
+			options = confObj.geoJSONLayerOptions;
+		}
+		confObj.layerGroup = L.geoJson(geoJSONObject,options);
 		confObj.layerGroup.addTo(map);
 	},function (error){});
 }
