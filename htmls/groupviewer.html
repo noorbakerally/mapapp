@@ -3,7 +3,14 @@
 	<table ng-table ="usersTable" class="table table-striped">
 		<tr ng-repeat="conf in configs" ng-controller="OneGroupViewerController">
 			<td data-title="'Name'">{{conf.name}} </td>
-			<td><img src="{{conf.getIconURL() }}" style="height:20px"> </td>
+
+			<td>
+				<img ng-if="conf.geoJSONLayerOptions" src="{{conf.getIconURL() }}" style="height:20px;background-color:{{conf.geoJSONLayerOptions.fillColor}};border-width:1px; border-style:solid; border-color:{{conf.geoJSONLayerOptions.color}};">
+				<img ng-if="!conf.geoJSONLayerOptions" src="{{conf.getIconURL() }}" style="height:20px">
+
+			</td>
+
+
 			<td data-title="'Items'" style="text-align:center">{{conf.dataItems.length}}</td>
 			<td data-title="'Show/Hide'" style="text-align:center"><input type="checkbox" ng-change="show(conf.name)" ng-model="conf.visible"></td>
 			<td data-title="">
