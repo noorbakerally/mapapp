@@ -117,7 +117,15 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 		}
 		$scope.$parent.updateVar.selectedObject = $scope.configs[groupName];
 		$scope.$parent.updateVar.columnVal = {};
-		$scope.$parent.updateVar.cols = Object.keys($scope.$parent.updateVar.selectedObject.cols);
+
+		if ($scope.$parent.updateVar.selectedObject.cols){
+			$scope.$parent.updateVar.cols = Object.keys($scope.$parent.updateVar.selectedObject.cols);
+		} else {
+			$scope.$parent.updateVar.cols = null;
+		}
+		
+
+
 	};
 	
 	$scope.show = function(groupName){
@@ -249,7 +257,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	}
 
 	// for all default dataConfURIs
-	var dataConfURIs = ["https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data2.conf"];
+	var dataConfURIs = ["https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data1.conf","https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data2.conf"];
 	if ($routeParams.dataConfURI && $routeParams.dataConfURI.constructor == Array){
 		dataConfURIs = dataConfURIs.concat($routeParams.dataConfURI);
 	} else if ($routeParams.dataConfURI){

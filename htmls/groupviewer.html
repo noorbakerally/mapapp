@@ -22,21 +22,21 @@
 			<div>{{$parent.updateVar.selectedObject.description}}</div>
 			<div></div>
 		</div>
-		<table ng-table ="colsTable" class="table table-striped">
-		<tr ng-repeat="col in $parent.updateVar.cols">
-			<td data-title="'Column'">{{col}}</td>
-			<td data-title="'value'">
-				<select ng-model="$parent.updateVar.columnVal[col]">
-					<option value="none">none</option>
-					<option ng-repeat="x in $parent.updateVar.selectedObject.cols[col]" value="{{x}}">{{x}}</option>
-				</select>
-			</td>
-		</tr>
-	</table>
-	<button ng-click="applyFilter()">Apply Filter</button>
-	<button ng-click="clearFilter()">Clear Filter</button>
-
-
+		<div ng-show="$parent.updateVar.cols">
+			<table ng-table ="colsTable" class="table table-striped">
+				<tr ng-repeat="col in $parent.updateVar.cols">
+					<td data-title="'Column'">{{col}}</td>
+					<td data-title="'value'">
+						<select ng-model="$parent.updateVar.columnVal[col]">
+							<option value="none">none</option>
+							<option ng-repeat="x in $parent.updateVar.selectedObject.cols[col]" value="{{x}}">{{x}}</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<button ng-click="applyFilter()">Apply Filter</button>
+			<button ng-click="clearFilter()">Clear Filter</button>
+		</div>
 	</div>
 </div>
 
