@@ -194,10 +194,29 @@ models.GeoJSONDataSource.constructor = models.GeoJSONDataSource;
 models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 	this.promise.then(function (answer){
 		var geoJSONObject = answer.data;
+		confObj.cols = {};
 		var options = {};
 		if (confObj.geoJSONLayerOptions){
 			options = confObj.geoJSONLayerOptions;
 		}
+
+		var items = geoJSONObject.features;
+		for (var item in items) {
+			var properties = items[item].properties;
+			var keys = Object.keys(properties);
+			for (var k in keys){
+				var key = keys[k];
+				if (!confObj.cols[key]){
+					confObj.cols[key] = []
+				}
+				if (confObj.cols[key].indexOf(properties[key] == -1)){
+					confObj.cols[key].push(properties[key]);
+				}
+			}
+		}
+		
+
+
 		confObj.layerGroup = L.geoJson(geoJSONObject,options);
 		confObj.layerGroup.addTo(map);
 	},function (error){});
