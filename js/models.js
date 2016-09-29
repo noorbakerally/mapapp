@@ -47,11 +47,16 @@ models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) 
 		} else {
 			newLayerConfig.url = newConfig.url;
 		}
-		newLayerConfig.latCol = newConfig.latCol;
-		newLayerConfig.longCol = newConfig.longCol;
-		newLayerConfig.markerDescription = newConfig.markerDescription;
 	}
-	
+
+	//add if if error
+	newLayerConfig.latCol = newConfig.latCol;
+	newLayerConfig.longCol = newConfig.longCol;
+	newLayerConfig.markerDescription = newConfig.markerDescription;
+	//====
+
+
+
 	newLayerConfig.name = newConfig.name;
 	newLayerConfig.description = newConfig.description;
 
@@ -61,7 +66,10 @@ models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) 
 		newLayerConfig.dataSource = new models.SPARQLDataSource();
 		newLayerConfig.dataSource.query = newConfig.dataSource.query;
 	}
+
+	//setting data source options
 	newLayerConfig.dataSource.url = newConfig.dataSource.url;
+	newLayerConfig.dataSource.filterDescription = newConfig.dataSource.filterDescription;
 
 	var data = SPARQLService.query(newConfig.dataSource.url,encodeURIComponent(newConfig.dataSource.query));
 	newLayerConfig.dataSource.promise = data;
@@ -196,16 +204,22 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		var geoJSONObject = answer.data;
 		confObj.cols = {};
 		var options = {};
+		confObj.dataSource.promiseResolved = true;
 		if (confObj.geoJSONLayerOptions){
 			options = confObj.geoJSONLayerOptions;
 		}
 
 		var items = geoJSONObject.features;
+		console.log(confObj.dataSource);
 		for (var item in items) {
 			var properties = items[item].properties;
 			var keys = Object.keys(properties);
 			for (var k in keys){
 				var key = keys[k];
+				
+				if (confObj.dataSource.filterDescription && confObj.dataSource.filterDescription.filters.indexOf(key) == -1) {
+					continue;
+				}
 				if (!confObj.cols[key]){
 					confObj.cols[key] = []
 				}
@@ -214,7 +228,7 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				}
 			}
 		}
-		
+		console.log(confObj.cols);
 
 
 		confObj.layerGroup = L.geoJson(geoJSONObject,options);

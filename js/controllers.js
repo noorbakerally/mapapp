@@ -287,6 +287,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 				var configs = data.data;
 				for (var config in configs ){
 					var newConfig = configs[config];
+					console.log(newConfig);
 					$rootScope.config[newConfig.name] = mapBox.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
 				} 
 			});
