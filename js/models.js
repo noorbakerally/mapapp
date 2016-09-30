@@ -121,7 +121,8 @@ models.MarkerLayerConfig.prototype = Object.create(models.LayerConfig.prototype)
 models.MarkerLayerConfig.constructor = models.MarkerLayerConfig;
 
 models.MarkerLayerConfig.prototype.getIconURL = function (){
-	if (this.url){
+	console.log(this);
+	if (this.markerLayerOptions.url){
 		return this.url;
 	} else {
 		return (this.defaultMarkerURL+this.color);
@@ -207,7 +208,9 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		confObj.dataSource.promiseResolved = true;
 		if (confObj.geoJSONLayerOptions){
 			options = confObj.geoJSONLayerOptions;
-		}
+		} else if (confObj.markerLayerOptions){
+
+		} 
 
 		var items = geoJSONObject.features;
 		console.log(confObj.dataSource);
@@ -230,6 +233,10 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		}
 		console.log(confObj.cols);
 
+
+		options.onEachFeature = function (feature, layer) {
+			console.log("created");
+		}
 
 		confObj.layerGroup = L.geoJson(geoJSONObject,options);
 		confObj.layerGroup.addTo(map);

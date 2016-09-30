@@ -31,7 +31,10 @@
 		<div ng-show="$parent.updateVar.cols">
 			<table ng-table ="colsTable" class="table table-striped">
 				<tr ng-repeat="col in $parent.updateVar.cols">
-					<td data-title="'Column'">{{col}}</td>
+					<td data-title="'Column'">
+						<span ng-if="!$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]">{{col}}</span>
+						<span ng-if="$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]">{{$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]}}</span>
+					</td>
 					<td data-title="'value'">
 						<select ng-model="$parent.updateVar.columnVal[col]" style="max-width:50%">
 							<option value="none">none</option>
