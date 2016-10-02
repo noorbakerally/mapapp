@@ -202,7 +202,7 @@ LIMIT 10
 	};
 	$scope.addGroup = function (){
 
-		newConfig = new models.MarkerLayerConfig();
+		newConfig = new models.MarkerLayer();
 		newConfig.name = $scope.groupname;
 		newConfig.latCol = $scope.lat;
 		newConfig.longCol = $scope.long;

@@ -41,7 +41,7 @@ models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) 
 			newLayerConfig.geoJSONLayerOptions = newConfig.geoJSONLayerOptions;
 		}
 	} else if (newConfig.type == "MarkerLayerConfig"){
-		newLayerConfig = new models.MarkerLayerConfig();
+		newLayerConfig = new models.MarkerLayer();
 		if (newConfig.color){
 			newLayerConfig.color = newConfig.color;
 		} else {
@@ -109,7 +109,7 @@ models.LayerConfig = function (name,description,color,url,visible,layerGroup,dat
 	this.dataSource = dataSource;
 }
 
-models.MarkerLayerConfig = function (name,description,color,url,visible,layerGroup,latCol,longCol,desc){
+models.MarkerLayer = function (name,description,color,url,visible,layerGroup,latCol,longCol,desc){
 	models.LayerConfig.call(this);
 	this.latCol = latCol;
 	this.longCol = longCol;
@@ -117,17 +117,17 @@ models.MarkerLayerConfig = function (name,description,color,url,visible,layerGro
 	this.defaultMarkerURL = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|";
 }
 
-models.MarkerLayerConfig.prototype = Object.create(models.LayerConfig.prototype);
-models.MarkerLayerConfig.constructor = models.MarkerLayerConfig;
+models.MarkerLayer.prototype = Object.create(models.LayerConfig.prototype);
+models.MarkerLayer.constructor = models.MarkerLayer;
 
-models.MarkerLayerConfig.prototype.getIconURL = function (){
+models.MarkerLayer.prototype.getIconURL = function (){
 	if (this.url){
 		return this.url;
 	} else {
 		return (this.defaultMarkerURL+this.color);
 	}
 }
-models.MarkerLayerConfig.prototype.getLayerGroup = function (map) {
+models.MarkerLayer.prototype.getLayerGroup = function (map) {
 	var markers = []
 	if (this.dataSource.promiseResolved){
 		return this.layerGroup;
