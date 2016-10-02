@@ -132,12 +132,12 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 
 		if (configObj.visible){
 			if (configObj.dataSource.promiseResolved) {
-				configObj.layerGroup.addTo($rootScope.map);
+				configObj.layerGroup.addTo($rootScope.map.mapObj);
 			} else {
 				configObj.dataSource.getDataItems($rootScope.map,configObj);
 			}
 		} else {
-			$rootScope.map.removeLayer(configObj.layerGroup);
+			$rootScope.map.mapObj.removeLayer(configObj.layerGroup);
 			configObj.visible = false;
 		}
 
