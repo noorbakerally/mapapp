@@ -297,7 +297,8 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 				currentMarker.bindPopup(dataItemDescription);
 			}
 
-			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
+			//temp
+			//currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			dataItem.marker = currentMarker;
 			markers.push(currentMarker);
 			confObj.dataItems.push(dataItem); 
