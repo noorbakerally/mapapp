@@ -33,7 +33,7 @@ models.MapBoxMap.prototype.loadMap = function (){
 	this.mapObj = mymap;
 }
 
-models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) {
+models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 	var newLayerConfig;
 	if (newConfig.type == "VectorLayerConfig"){
 		newLayerConfig = new models.VectorLayer();
@@ -78,7 +78,7 @@ models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) 
 
 	
 	if (newConfig.initialShow){
-		newLayerConfig.dataSource.getDataItems(mapObj,newLayerConfig);
+		newLayerConfig.dataSource.getDataItems(this,newLayerConfig);
 		newLayerConfig.visible = true;
 	}
 	return newLayerConfig;
@@ -157,11 +157,11 @@ models.MarkerDataItem.prototype = Object.create(models.DataItem.prototype);
 models.MarkerDataItem.constructor = models.MarkerDataItem;
 
 
-models.DataItem.prototype.show = function (visible,mapObj){
+models.DataItem.prototype.show = function (visible){
 	if (visible){
-		mapObj.addLayer(this.layer);
+		this.map.mapObj.addLayer(this.layer);
 	} else {
-		mapObj.removeLayer(this.layer);
+		this.map.mapObj.removeLayer(this.layer);
 	}
 }
 
@@ -253,13 +253,14 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 					confObj.cols[key].push(properties[key]);
 				}
 			}
+			vectorDateItem.map = map;
 			vectorDateItem.layer = layer;
 			confObj.dataItems.push(vectorDateItem);
 
 		}
 
 		confObj.layerGroup = L.geoJson(geoJSONObject,options);
-		confObj.layerGroup.addTo(map);
+		confObj.layerGroup.addTo(map.mapObj);
 	},function (error){});
 }
 
@@ -316,11 +317,12 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			}
 			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			dataItem.layer = currentMarker;
+			dataItem.map = map;
 			markers.push(currentMarker);
 			confObj.dataItems.push(dataItem); 
 		}
 		confObj.layerGroup = L.layerGroup(markers);
-		confObj.layerGroup.addTo(map);
+		confObj.layerGroup.addTo(map.mapObj);
 	},
 	function (error){
 	

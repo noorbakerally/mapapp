@@ -16,7 +16,7 @@ angular.module('myApp').controller('DataConfModalController', function ($scope, 
 				var newConfigs = dataConf.data;
 				for (var config in newConfigs){
 					var newConfig = newConfigs[config];
-					$rootScope.config[newConfig.name] = $rootScope.mapObj.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
+					$rootScope.config[newConfig.name] = $rootScope.map.loadLayer(newConfig,SPARQLService);
 				}
 			});
 
@@ -24,7 +24,7 @@ angular.module('myApp').controller('DataConfModalController', function ($scope, 
 			var newConfigs = JSON.parse($scope.content);
 			for (var config in newConfigs){
 				var newConfig = newConfigs[config];
-				$rootScope.config[newConfig.name] = $rootScope.mapObj.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
+				$rootScope.config[newConfig.name] = $rootScope.map.loadLayer(newConfig,SPARQLService);
 			}
 		}
 		$uibModalInstance.dismiss('cancel');
@@ -76,7 +76,7 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 					showItem = true;
 				}
 			} 
-			currentDateItem.show(showItem,$rootScope.map);
+			currentDateItem.show(showItem);
 		}
 	}
 
@@ -84,7 +84,7 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 		
 		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
 			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
-			currentDateItem.show(true,$rootScope.map);
+			currentDateItem.show(true);
 		}
 	}
 });
@@ -272,8 +272,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		
 		mapBox.loadMap();
 
-		$rootScope.mapObj = mapBox;
-		$rootScope.map = mapBox.mapObj;
+		$rootScope.map = mapBox;
 		
 		var i = 0;
 		while (i<dataConfURIs.length){
@@ -283,7 +282,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 				var configs = data.data;
 				for (var config in configs ){
 					var newConfig = configs[config];
-					$rootScope.config[newConfig.name] = mapBox.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
+					$rootScope.config[newConfig.name] = mapBox.loadLayer(newConfig,SPARQLService);
 				} 
 			});
 			i++;
