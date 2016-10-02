@@ -215,9 +215,7 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		confObj.dataSource.promiseResolved = true;
 		if (confObj.vectorLayerOptions){
 			options = confObj.vectorLayerOptions;
-		} else if (confObj.markerLayerOptions){
-
-		} 
+		}
 
 		var items = geoJSONObject.features;
 		for (var item in items) {
@@ -232,7 +230,7 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				if (!confObj.cols[key]){
 					confObj.cols[key] = []
 				}
-				if (confObj.cols[key].indexOf(properties[key] == -1)){
+				if (confObj.cols[key].indexOf(properties[key]) == -1){
 					confObj.cols[key].push(properties[key]);
 				}
 			}
