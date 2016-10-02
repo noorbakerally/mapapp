@@ -110,6 +110,7 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	$scope.$parent.selectedObject = "test2";
 
 	$scope.showDetails = function (groupName){
+
 		if ($scope.$parent.updateVar.selectedObject && $scope.$parent.updateVar.selectedObject.name == groupName){
 			$scope.$parent.updateVar.selectedObject = null;
 			return;
@@ -122,9 +123,6 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 		} else {
 			$scope.$parent.updateVar.cols = null;
 		}
-		
-
-
 	};
 	
 	$scope.show = function(groupName){

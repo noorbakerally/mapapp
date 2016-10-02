@@ -23,6 +23,8 @@
 	</table>
 
 	<div ng-controller="oneGroupItemsController" ng-show="$parent.updateVar.selectedObject">
+		
+
 		<div><h3>{{$parent.updateVar.selectedObject.name}}</h3></div>
 		<div>
 			<div>{{$parent.updateVar.selectedObject.description}}</div>
@@ -34,6 +36,7 @@
 					<td data-title="'Column'">
 						<span ng-if="!$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]">{{col}}</span>
 						<span ng-if="$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]">{{$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]}}</span>
+
 					</td>
 					<td data-title="'value'">
 						<select ng-model="$parent.updateVar.columnVal[col]" style="max-width:50%">
