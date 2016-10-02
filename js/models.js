@@ -242,7 +242,7 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				var key = keys[k];
 				vectorDateItem[key] = properties[key];
 				//skipping the item if that item is not in filters
-				if (confObj.dataSource.filterDescription && confObj.dataSource.filterDescription.filters.indexOf(key) == -1) {
+				if (confObj.dataSource.filterDescription && confObj.dataSource.filterDescription.filters && confObj.dataSource.filterDescription.filters.indexOf(key) == -1) {
 					continue;
 				}
 
