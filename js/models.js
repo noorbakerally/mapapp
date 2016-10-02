@@ -122,7 +122,7 @@ models.MarkerLayerConfig.constructor = models.MarkerLayerConfig;
 
 models.MarkerLayerConfig.prototype.getIconURL = function (){
 	console.log(this);
-	if (this.markerLayerOptions.url){
+	if (this.url){
 		return this.url;
 	} else {
 		return (this.defaultMarkerURL+this.color);
@@ -296,14 +296,12 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			if (dataItemDescription.length > 0){
 				currentMarker.bindPopup(dataItemDescription);
 			}
-
-			//temp
-			//currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
+			console.log(confObj);
+			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			dataItem.marker = currentMarker;
 			markers.push(currentMarker);
 			confObj.dataItems.push(dataItem); 
 		}
-		console.log(confObj.dataItems);
 		confObj.layerGroup = L.layerGroup(markers);
 		confObj.layerGroup.addTo(map);
 	},
