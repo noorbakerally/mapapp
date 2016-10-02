@@ -38,7 +38,7 @@ models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) 
 	if (newConfig.type == "VectorLayerConfig"){
 		newLayerConfig = new models.VectorLayer();
 		if (newConfig.vectorLayerOptions){
-			newLayerConfig.geoJSONLayerOptions = newConfig.vectorLayerOptions;
+			newLayerConfig.vectorLayerOptions = newConfig.vectorLayerOptions;
 		}
 	} else if (newConfig.type == "MarkerLayerConfig"){
 		newLayerConfig = new models.MarkerLayer();
@@ -213,8 +213,8 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		confObj.cols = {};
 		var options = {};
 		confObj.dataSource.promiseResolved = true;
-		if (confObj.geoJSONLayerOptions){
-			options = confObj.geoJSONLayerOptions;
+		if (confObj.vectorLayerOptions){
+			options = confObj.vectorLayerOptions;
 		} else if (confObj.markerLayerOptions){
 
 		} 
