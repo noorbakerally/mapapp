@@ -208,7 +208,7 @@ LIMIT 10
 		newConfig.latCol = $scope.lat;
 		newConfig.longCol = $scope.long;
 		newConfig.color = $scope.color;
-		newConfig.markerDescription = $scope.desc;
+		newConfig.descriptionMarkUp = $scope.desc;
 		newConfig.dataSource = new models.SPARQLDataSource();
 		newConfig.dataSource.url = $scope.url;
 		newConfig.dataSource.query = newConfig.dataSource

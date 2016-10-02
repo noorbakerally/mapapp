@@ -52,7 +52,7 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 	//add if if error
 	newLayerConfig.latCol = newConfig.latCol;
 	newLayerConfig.longCol = newConfig.longCol;
-	newLayerConfig.markerDescription = newConfig.markerDescription;
+	newLayerConfig.descriptionMarkUp = newConfig.descriptionMarkUp;
 	//====
 
 
@@ -113,7 +113,7 @@ models.MarkerLayer = function (name,description,color,url,visible,layerGroup,lat
 	models.LayerConfig.call(this);
 	this.latCol = latCol;
 	this.longCol = longCol;
-	this.markerDescription = desc;
+	this.descriptionMarkUp = desc;
 	this.defaultMarkerURL = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|";
 }
 
@@ -311,7 +311,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
 			
 
-			var dataItemDescription = dataItem.getDescription(confObj.markerDescription);
+			var dataItemDescription = dataItem.getDescription(confObj.descriptionMarkUp);
 			if (dataItemDescription.length > 0){
 				currentMarker.bindPopup(dataItemDescription);
 			}
