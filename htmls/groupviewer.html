@@ -32,7 +32,8 @@
 		</div>
 		<div ng-show="$parent.updateVar.cols">
 			<table ng-table ="colsTable" class="table table-striped">
-				<tr ng-repeat="col in $parent.updateVar.cols">
+				<tr ng-repeat="col in $parent.updateVar.cols" ng-if="!$parent.updateVar.selectedObject.dataSource.filterDescription || !$parent.updateVar.selectedObject.dataSource.filterDescription.filters || $parent.updateVar.selectedObject.dataSource.filterDescription.filters && $parent.updateVar.selectedObject.dataSource.filterDescription.filters.indexOf(col) > -1">
+
 					<td data-title="'Column'">
 						<span ng-if="!$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]">{{col}}</span>
 						<span ng-if="$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]">{{$parent.updateVar.selectedObject.dataSource.filterDescription.labels[col]}}</span>
@@ -44,6 +45,7 @@
 							<option ng-repeat="x in $parent.updateVar.selectedObject.cols[col]" value="{{x}}">{{x}}</option>
 						</select>
 					</td>
+
 				</tr>
 			</table>
 			<button ng-click="applyFilter()">Apply Filter</button>
