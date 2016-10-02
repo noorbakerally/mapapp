@@ -35,10 +35,10 @@ models.MapBoxMap.prototype.loadMap = function (){
 
 models.Map.prototype.loadDataConfig = function (newConfig,SPARQLService,mapObj) {
 	var newLayerConfig;
-	if (newConfig.type == "GeoJSONLayerConfig"){
-		newLayerConfig = new models.LayerConfig();
-		if (newConfig.geoJSONLayerOptions){
-			newLayerConfig.geoJSONLayerOptions = newConfig.geoJSONLayerOptions;
+	if (newConfig.type == "VectorLayerConfig"){
+		newLayerConfig = new models.VectorLayer();
+		if (newConfig.vectorLayerOptions){
+			newLayerConfig.geoJSONLayerOptions = newConfig.vectorLayerOptions;
 		}
 	} else if (newConfig.type == "MarkerLayerConfig"){
 		newLayerConfig = new models.MarkerLayer();
@@ -137,6 +137,14 @@ models.MarkerLayer.prototype.getLayerGroup = function (map) {
 	
 	return this.layerGroup;
 }
+
+models.VectorLayer = function (){
+
+}
+models.VectorLayer.prototype = Object.create(models.LayerConfig.prototype);
+models.VectorLayer.constructor = models.VectorLayer;
+
+
 models.DataItem = function(latCol,longCol){
 	this.latCol = latCol;
 	this.longCol = longCol;
