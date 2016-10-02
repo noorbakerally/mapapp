@@ -191,6 +191,13 @@ models.DataItem.prototype.getDescription = function(desc){
 	return newStr;
 }
 
+models.VectorDataItem = function(){
+
+}
+models.VectorDataItem.prototype = Object.create(models.VectorDataItem.prototype);
+models.VectorDataItem.constructor = models.VectorDataItem;
+
+
 models.DataSource = function(url,sourceContent,promise,promiseResolved,dataItems){
 	this.url = url;
 	this.sourceContent = sourceContent;
@@ -218,6 +225,7 @@ models.GeoJSONDataSource.constructor = models.GeoJSONDataSource;
 models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 	this.promise.then(function (answer){
 		var geoJSONObject = answer.data;
+		confObj.dataItems = [];
 		confObj.cols = {};
 		var options = {};
 		confObj.dataSource.promiseResolved = true;
@@ -227,14 +235,17 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 
 		var items = geoJSONObject.features;
 		for (var item in items) {
+			var vectorDateItem = new models.VectorDataItem();
 			var properties = items[item].properties;
 			var keys = Object.keys(properties);
 			for (var k in keys){
 				var key = keys[k];
-				
+				vectorDateItem[key] = properties[key];
+				//skipping the item if that item is not in filters
 				if (confObj.dataSource.filterDescription && confObj.dataSource.filterDescription.filters.indexOf(key) == -1) {
 					continue;
 				}
+
 				if (!confObj.cols[key]){
 					confObj.cols[key] = []
 				}
@@ -242,6 +253,7 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 					confObj.cols[key].push(properties[key]);
 				}
 			}
+			confObj.dataItems.push(vectorDateItem);
 		}
 
 
