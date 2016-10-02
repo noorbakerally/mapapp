@@ -159,9 +159,9 @@ models.MarkerDataItem.constructor = models.MarkerDataItem;
 
 models.MarkerDataItem.prototype.show = function (visible,mapObj){
 	if (visible){
-		mapObj.addLayer(this.marker);
+		mapObj.addLayer(this.layer);
 	} else {
-		mapObj.removeLayer(this.marker);
+		mapObj.removeLayer(this.layer);
 	}
 }
 
@@ -233,10 +233,10 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 			options = confObj.vectorLayerOptions;
 		}
 
-		var items = geoJSONObject.features;
-		for (var item in items) {
+		
+		options.onEachFeature = function (feature, layer) {
 			var vectorDateItem = new models.VectorDataItem();
-			var properties = items[item].properties;
+			var properties = feature.properties;
 			var keys = Object.keys(properties);
 			for (var k in keys){
 				var key = keys[k];
@@ -253,12 +253,9 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 					confObj.cols[key].push(properties[key]);
 				}
 			}
+			vectorDateItem.layer = layer;
 			confObj.dataItems.push(vectorDateItem);
-		}
 
-
-		options.onEachFeature = function (feature, layer) {
-			
 		}
 
 		confObj.layerGroup = L.geoJson(geoJSONObject,options);
@@ -318,7 +315,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 				currentMarker.bindPopup(dataItemDescription);
 			}
 			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
-			dataItem.marker = currentMarker;
+			dataItem.layer = currentMarker;
 			markers.push(currentMarker);
 			confObj.dataItems.push(dataItem); 
 		}
