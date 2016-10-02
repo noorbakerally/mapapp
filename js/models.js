@@ -157,7 +157,7 @@ models.MarkerDataItem.prototype = Object.create(models.DataItem.prototype);
 models.MarkerDataItem.constructor = models.MarkerDataItem;
 
 
-models.MarkerDataItem.prototype.show = function (visible,mapObj){
+models.DataItem.prototype.show = function (visible,mapObj){
 	if (visible){
 		mapObj.addLayer(this.layer);
 	} else {
@@ -194,7 +194,7 @@ models.DataItem.prototype.getDescription = function(desc){
 models.VectorDataItem = function(){
 
 }
-models.VectorDataItem.prototype = Object.create(models.VectorDataItem.prototype);
+models.VectorDataItem.prototype = Object.create(models.DataItem.prototype);
 models.VectorDataItem.constructor = models.VectorDataItem;
 
 
