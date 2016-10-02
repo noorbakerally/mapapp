@@ -145,11 +145,19 @@ models.VectorLayer.prototype = Object.create(models.LayerConfig.prototype);
 models.VectorLayer.constructor = models.VectorLayer;
 
 
-models.DataItem = function(latCol,longCol){
+models.DataItem = function(){
+}
+
+
+models.MarkerDataItem = function(latCol,longCol){
 	this.latCol = latCol;
 	this.longCol = longCol;
 }
-models.DataItem.prototype.show = function (visible,mapObj){
+models.MarkerDataItem.prototype = Object.create(models.DataItem.prototype);
+models.MarkerDataItem.constructor = models.MarkerDataItem;
+
+
+models.MarkerDataItem.prototype.show = function (visible,mapObj){
 	if (visible){
 		mapObj.addLayer(this.marker);
 	} else {
@@ -273,8 +281,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 		markers = [];
 		for (var binding in bindings){
 			currentBind = bindings[binding];
-			//var dataItem = new models.DataItem(currentBind[confObj.latCol].value,currentBind[confObj.longCol].value);
-			var dataItem = new models.DataItem(confObj.latCol,confObj.longCol);
+			var dataItem = new models.MarkerDataItem(confObj.latCol,confObj.longCol);
 			
 			for (var col in answer.data.head.vars){
 				if (answer.data.head.vars[col] != confObj.latCol && answer.data.head.vars[col] != confObj.longCol ){
