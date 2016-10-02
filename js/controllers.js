@@ -35,7 +35,6 @@ angular.module('myApp').controller('DropdownCtrl', function ($scope, $log,$uibMo
 	$scope.test="test";
   
 	$scope.addDataConfiguration = function (){
-		console.log("test");
 		var modalInstance = $uibModal.open({templateUrl: 'myModalContent.html',controller: 'DataConfModalController'});
 	};
   
@@ -188,7 +187,6 @@ LIMIT 10
 		$scope.sparql_status = false;
 		data = SPARQLService.query($scope.url,encodeURIComponent($scope.querystr));
 		data.then(function (answer){
-			console.log(answer);
 			sparql_result = answer.data;
 			$scope.columns = answer.data.head.vars;
 			bindings = answer.data.results.bindings;
@@ -245,7 +243,6 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 		- group type
 
 	*/
-	console.log($routeParams);
 	
 	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
 	//http://localhost:8000/js/conf.js
@@ -287,7 +284,6 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 				var configs = data.data;
 				for (var config in configs ){
 					var newConfig = configs[config];
-					console.log(newConfig);
 					$rootScope.config[newConfig.name] = mapBox.loadDataConfig(newConfig,SPARQLService,$rootScope.map );
 				} 
 			});

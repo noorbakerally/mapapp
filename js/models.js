@@ -121,7 +121,6 @@ models.MarkerLayerConfig.prototype = Object.create(models.LayerConfig.prototype)
 models.MarkerLayerConfig.constructor = models.MarkerLayerConfig;
 
 models.MarkerLayerConfig.prototype.getIconURL = function (){
-	console.log(this);
 	if (this.url){
 		return this.url;
 	} else {
@@ -185,7 +184,7 @@ models.DataSource = function(url,sourceContent,promise,promiseResolved,dataItems
 }
 
 models.DataSource.prototype.showDetails = function (){
-	console.log(this.url);
+	
 };
 
 
@@ -213,7 +212,6 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		} 
 
 		var items = geoJSONObject.features;
-		console.log(confObj.dataSource);
 		for (var item in items) {
 			var properties = items[item].properties;
 			var keys = Object.keys(properties);
@@ -231,11 +229,10 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				}
 			}
 		}
-		console.log(confObj.cols);
 
 
 		options.onEachFeature = function (feature, layer) {
-			console.log("created");
+			
 		}
 
 		confObj.layerGroup = L.geoJson(geoJSONObject,options);
@@ -265,7 +262,6 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 		confObj.dataItems = [];
 		confObj.cols = {};
 		this.sparqlResult = answer.data;
-		console.log(answer);
 		var bindings = answer.data.results.bindings;
 		this.promiseResolved = true;
 		markers = [];
@@ -296,7 +292,6 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			if (dataItemDescription.length > 0){
 				currentMarker.bindPopup(dataItemDescription);
 			}
-			console.log(confObj);
 			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			dataItem.marker = currentMarker;
 			markers.push(currentMarker);
