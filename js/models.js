@@ -255,6 +255,11 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 			}
 			vectorDateItem.map = map;
 			vectorDateItem.layer = layer;
+			var dataItemDescription = vectorDateItem.getDescription(confObj.descriptionMarkUp);
+			if (dataItemDescription.length > 0){
+				vectorDateItem.layer.bindPopup(dataItemDescription);
+			}
+			
 			confObj.dataItems.push(vectorDateItem);
 
 		}
