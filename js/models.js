@@ -35,6 +35,7 @@ models.MapBoxMap.prototype.loadMap = function (){
 
 models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 	var newLayerConfig;
+
 	if (newConfig.type == "VectorLayerConfig"){
 		newLayerConfig = new models.VectorLayer();
 		if (newConfig.vectorLayerOptions){
@@ -47,6 +48,8 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 		} else {
 			newLayerConfig.url = newConfig.url;
 		}
+	} else {
+		newLayerConfig = new models.MarkerLayer();
 	}
 
 	//add if if error
@@ -54,17 +57,19 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 	newLayerConfig.longCol = newConfig.longCol;
 	newLayerConfig.descriptionMarkUp = newConfig.descriptionMarkUp;
 	//====
-
-
-
 	newLayerConfig.name = newConfig.name;
 	newLayerConfig.description = newConfig.description;
+
 
 	if (newConfig.dataSource.type == "GeoJSONDataSource"){
 		newLayerConfig.dataSource = new models.GeoJSONDataSource();
 	} else if (newConfig.dataSource.type == "SPARQLDataSource"){
 		newLayerConfig.dataSource = new models.SPARQLDataSource();
 		newLayerConfig.dataSource.query = newConfig.dataSource.query;
+	} else if (newConfig.dataSource.type == "RDFDataSource"){
+		newLayerConfig.dataSource = new models.RDFDataSource();
+		//newConfig.dataSource.url = "http://ci.emse.fr/jena_service/run.php?dataset=" + newConfig.dataSource.url;
+		newConfig.dataSource.url = "http://localhost:8000/test.json";
 	}
 
 	//setting data source options
@@ -271,6 +276,70 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 }
 
 
+models.RDFDataSource = function (url){
+	models.DataSource.call(this);
+	this.url = url;
+}
+
+models.RDFDataSource.prototype = Object.create(models.DataSource.prototype);
+models.RDFDataSource.constructor = models.RDFDataSource;
+models.RDFDataSource.prototype.getDataItems = function(map,confObj){
+	confObj.dataItems = [];
+	confObj.cols = {};
+	this.promiseResolved = true;
+	var markers = [];
+	this.promise.then(function (answer){
+
+		var bindings = answer.data.results.bindings;
+		var latitudesPredicates = ["http://www.w3.org/2003/01/geo/wgs84_pos#lat"];
+		var longitudePredicates = ["http://www.w3.org/2003/01/geo/wgs84_pos#long"];
+
+		dataItems = {};
+
+		for (var binding in bindings){
+			var currentBinding = bindings[binding];
+			var subject = currentBinding.subject.value;
+			var predicate = currentBinding.predicate.value;
+			var value = currentBinding.value.value;
+
+			var dataItem = dataItems[subject];
+			if (!dataItem){
+				dataItem = new models.MarkerDataItem();
+			}
+
+			if (latitudesPredicates.indexOf(predicate) != -1){
+				dataItem.latCol = predicate;
+			} else if (longitudePredicates.indexOf(predicate) != -1){
+				dataItem.longCol = predicate;
+			}
+			dataItem[predicate] = value;
+
+			if (!confObj.cols[predicate]){
+				confObj.cols[predicate] = [];			
+			}
+			if (confObj.cols[predicate].indexOf(value) == -1){
+				confObj.cols[predicate].push(value);
+			}
+
+			dataItems[subject] = dataItem;
+		}
+
+		console.log(confObj.cols);
+		for (var dataItemCounter in dataItems){
+			var dataItem = dataItems[dataItemCounter];
+			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
+			dataItem.layer = currentMarker;
+			dataItem.map = map;
+			markers.push(currentMarker);
+			confObj.dataItems.push(dataItem); 
+		}
+		confObj.layerGroup = L.layerGroup(markers);
+		confObj.layerGroup.addTo(map.mapObj);
+
+
+	});
+}
+
 models.SPARQLDataSource = function (url,query,sparqlResult){
 	models.DataSource.call(this);
 	this.url = url;
@@ -303,6 +372,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 				if (answer.data.head.vars[col] != confObj.latCol && answer.data.head.vars[col] != confObj.longCol ){
 					dataItem[answer.data.head.vars[col]] = currentBind[answer.data.head.vars[col]].value;
 
+					//to change here losing one value
 					if (confObj.cols[answer.data.head.vars[col]]){
 						if (confObj.cols[answer.data.head.vars[col]].indexOf(currentBind[answer.data.head.vars[col]].value) == -1){
 							confObj.cols[answer.data.head.vars[col]].push(currentBind[answer.data.head.vars[col]].value);
