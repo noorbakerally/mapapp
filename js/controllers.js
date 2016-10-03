@@ -227,22 +227,6 @@ LIMIT 10
 
 angular.module('myApp').controller('initController', function($scope,$rootScope,$http,$routeParams,SPARQLService,Utilities) {
 	
-	/*
-		- group name
-		- item type
-		- icon type
-		- color
-		- number of items
-		- Options:
-			- show 
-			- hide
-			- edit
-		- sparql query
-		- description
-		- group type
-
-	*/
-	
 	//https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/conf.js
 	//http://localhost:8000/js/conf.js
 
@@ -253,7 +237,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	}
 
 	// for all default dataConfURIs
-	var dataConfURIs = ["http://localhost:8000/data2.conf"];
+	var dataConfURIs = ["http://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data4.conf"];
 	if ($routeParams.dataConfURI && $routeParams.dataConfURI.constructor == Array){
 		dataConfURIs = dataConfURIs.concat($routeParams.dataConfURI);
 	} else if ($routeParams.dataConfURI){
