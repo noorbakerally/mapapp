@@ -69,16 +69,10 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 			var showItem = true;
 			for (var key in keys) {
 				var currentColumn = $scope.$parent.updateVar.columnVal[keys[key]];
-				console.log(currentColumn);
-				console.log(currentDateItem[keys[key]]);
-
 				//test for all columns
 				//if value==none continue testing
 				//
-
 				if (currentColumn != "none"){
-					console.log(currentDateItem[keys[key]].indexOf(currentColumn) == -1);
-					console.log((currentDateItem[keys[key]] != currentColumn));
 					if ((currentDateItem[keys[key]] instanceof Array && currentDateItem[keys[key]].indexOf(currentColumn) == -1) || (!(currentDateItem[keys[key]] instanceof Array) && currentDateItem[keys[key]] != currentColumn)){
 						showItem = false;
 						break;

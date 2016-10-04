@@ -4,8 +4,8 @@
 			<td data-title="'Name'">{{conf.name}} </td>
 
 			<td>
-				<img ng-if="conf.vectorLayerOptions" src="{{conf.getIconURL() }}" style="height:20px;background-color:{{conf.vectorLayerOptions.fillColor}};border-width:1px; border-style:solid; border-color:{{conf.vectorLayerOptions.color}};">
-				<img ng-if="!conf.vectorLayerOptions" src="{{conf.getIconURL() }}" style="height:20px">
+				<img ng-if="conf.vectorLayerOptions" src="{{conf.getIconURL() }}" style="height:20px;width:20px;background-color:{{conf.vectorLayerOptions.fillColor}};border-width:1px; border-style:solid; border-color:{{conf.vectorLayerOptions.color}};">
+				<img ng-if="!conf.vectorLayerOptions" src="{{conf.getIconURL() }}" style="height:20px;">
 			</td>
 
 
