@@ -326,7 +326,12 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 			} else if (longitudePredicates.indexOf(predicate) != -1){
 				dataItem.longCol = predicate;
 			}
-			dataItem[predicate] = value;
+			//adding the predicate value as an array
+			if (dataItem[predicate]){
+				dataItem[predicate].push(value);
+			} else {
+				dataItem[predicate] = [value];
+			}
 
 			if (!confObj.cols[predicate]){
 				confObj.cols[predicate] = [];			
@@ -341,12 +346,13 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 		console.log(confObj.cols);
 		for (var dataItemCounter in dataItems){
 			var dataItem = dataItems[dataItemCounter];
-			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
+			var currentMarker = L.marker([dataItem[dataItem.latCol][0], dataItem[dataItem.longCol][0]]);
 			dataItem.layer = currentMarker;
 			dataItem.map = map;
 			markers.push(currentMarker);
 			confObj.dataItems.push(dataItem); 
 		}
+		console.log(dataItem);
 		confObj.layerGroup = L.layerGroup(markers);
 		confObj.layerGroup.addTo(map.mapObj);
 
