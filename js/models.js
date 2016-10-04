@@ -52,6 +52,11 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 		newLayerConfig = new models.MarkerLayer();
 	}
 
+	if (!newConfig.color && !newConfig.url){
+			newLayerConfig.color = "#000000";
+	}
+
+
 	//add if if error
 	newLayerConfig.latCol = newConfig.latCol;
 	newLayerConfig.longCol = newConfig.longCol;
@@ -347,6 +352,7 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 		for (var dataItemCounter in dataItems){
 			var dataItem = dataItems[dataItemCounter];
 			var currentMarker = L.marker([dataItem[dataItem.latCol][0], dataItem[dataItem.longCol][0]]);
+			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			dataItem.layer = currentMarker;
 			dataItem.map = map;
 			markers.push(currentMarker);
