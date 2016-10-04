@@ -130,8 +130,6 @@ models.LayerConfig.prototype.getColumnName = function (originalName) {
 
 models.LayerConfig.prototype.getGraphics = function () {
 	var obj = {};
-	console.log(this.name);
-	console.log(this);
 	if (this.getIconURL){
 		this.getIconURL();
 	}
@@ -147,8 +145,6 @@ models.LayerConfig.prototype.getGraphics = function () {
 			obj.color = this.vectorLayerOptions.color;
 		}
 	}
-	
-	console.log(obj);
 	return obj;
 };
 
@@ -164,7 +160,6 @@ models.MarkerLayer.prototype = Object.create(models.LayerConfig.prototype);
 models.MarkerLayer.constructor = models.MarkerLayer;
 
 models.MarkerLayer.prototype.getIconURL = function (){
-
 	if (!this.url && !this.color){
 		this.color = Utilities.getHexColor();
 		this.url = this.defaultMarkerURL+this.color;
@@ -183,6 +178,9 @@ models.MarkerLayer.prototype.getLayerGroup = function (map) {
 }
 
 models.VectorLayer = function (){
+	this.vectorLayerOptions = {};
+	this.vectorLayerOptions.fillColor = "#"+Utilities.getHexColor();
+	this.vectorLayerOptions.color = "#"+Utilities.getHexColor();
 
 }
 models.VectorLayer.prototype = Object.create(models.LayerConfig.prototype);
@@ -236,7 +234,7 @@ models.DataItem.prototype.getDescription = function(desc){
 }
 
 models.VectorDataItem = function(){
-
+	
 }
 models.VectorDataItem.prototype = Object.create(models.DataItem.prototype);
 models.VectorDataItem.constructor = models.VectorDataItem;
