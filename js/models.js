@@ -1,5 +1,5 @@
 var app = angular.module('myApp');
-
+var Utilities = angular.injector(["myApp"]).get("Utilities");
 models = {};
 
 models.Map = function (latitude,longitude,zoomLevel,mapObj){
@@ -113,6 +113,20 @@ models.LayerConfig = function (name,description,color,url,visible,layerGroup,dat
 	this.layerGroup = layerGroup;
 	this.dataSource = dataSource;
 }
+models.LayerConfig.prototype.getColumnName = function (originalName) {
+		
+	if (!this.dataSource.filterDescription){
+		return Utilities.getURLFragment(originalName);
+	}
+	var filters = this.dataSource.filterDescription.filters;
+	var labels = this.dataSource.filterDescription.labels;
+	if (filters && filters.indexOf(originalName) == -1){
+		return null;
+	} else if (labels[originalName]) {
+		return labels[originalName];
+	}
+	return Utilities.getURLFragment(originalName);
+};
 
 models.MarkerLayer = function (name,description,color,url,visible,layerGroup,latCol,longCol,desc){
 	models.LayerConfig.call(this);

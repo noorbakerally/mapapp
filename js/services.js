@@ -7,7 +7,6 @@ angular.module('myApp').service('SPARQLService', function($http) {
 
 angular.module('myApp').service('Utilities', function($http) {		
 	this.generateDescription = function (description,binding){
-
 		if (description.length > 0){
 			str = description;
 			ostr = description;
@@ -33,5 +32,23 @@ angular.module('myApp').service('Utilities', function($http) {
 			}
 		}
 		return newStr;
+	};
+
+
+	this.getURLFragment = function (newName){
+		var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+		  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+		  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+		  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+		  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+		  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+		if(pattern.test(newName)) {
+			if (newName.indexOf("#") != -1){
+				newName = newName.substring(newName.indexOf("#")+1, newName.length);
+			} else if (newName.indexOf("/") != -1){
+				newName = newName.substring(newName.indexOf("/")+1, newName.length);
+			}
+		}
+		return newName;
 	};
 });
