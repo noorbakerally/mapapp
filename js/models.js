@@ -52,11 +52,6 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 		newLayerConfig = new models.MarkerLayer();
 	}
 
-	if (!newConfig.color && !newConfig.url){
-			newLayerConfig.color = "#000000";
-	}
-
-
 	//add if if error
 	newLayerConfig.latCol = newConfig.latCol;
 	newLayerConfig.longCol = newConfig.longCol;
@@ -133,6 +128,30 @@ models.LayerConfig.prototype.getColumnName = function (originalName) {
 	return Utilities.getURLFragment(originalName);
 };
 
+models.LayerConfig.prototype.getGraphics = function () {
+	var obj = {};
+	console.log(this.name);
+	console.log(this);
+	if (this.getIconURL){
+		this.getIconURL();
+	}
+	if (this.url){
+		obj.img = true;
+		obj.url = this.url;
+	} else {
+		obj.img = false;
+		if (this.vectorLayerOptions && this.vectorLayerOptions.fillColor){
+			obj.fillColor = this.vectorLayerOptions.fillColor;
+		}
+		if (this.vectorLayerOptions && this.vectorLayerOptions.color){
+			obj.color = this.vectorLayerOptions.color;
+		}
+	}
+	
+	console.log(obj);
+	return obj;
+};
+
 models.MarkerLayer = function (name,description,color,url,visible,layerGroup,latCol,longCol,desc){
 	models.LayerConfig.call(this);
 	this.latCol = latCol;
@@ -145,11 +164,12 @@ models.MarkerLayer.prototype = Object.create(models.LayerConfig.prototype);
 models.MarkerLayer.constructor = models.MarkerLayer;
 
 models.MarkerLayer.prototype.getIconURL = function (){
-	if (this.url){
-		return this.url;
-	} else {
-		return (this.defaultMarkerURL+this.color);
+
+	if (!this.url && !this.color){
+		this.color = Utilities.getHexColor();
+		this.url = this.defaultMarkerURL+this.color;
 	}
+	return this.url;
 }
 models.MarkerLayer.prototype.getLayerGroup = function (map) {
 	var markers = []
@@ -348,7 +368,7 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 			dataItems[subject] = dataItem;
 		}
 
-		console.log(confObj.cols);
+		
 		for (var dataItemCounter in dataItems){
 			var dataItem = dataItems[dataItemCounter];
 			var currentMarker = L.marker([dataItem[dataItem.latCol][0], dataItem[dataItem.longCol][0]]);
@@ -358,7 +378,6 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 			markers.push(currentMarker);
 			confObj.dataItems.push(dataItem); 
 		}
-		console.log(dataItem);
 		confObj.layerGroup = L.layerGroup(markers);
 		confObj.layerGroup.addTo(map.mapObj);
 

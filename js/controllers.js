@@ -133,13 +133,11 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 		} else {
 			$scope.$parent.updateVar.cols = null;
 		}
-		console.log($scope.$parent.updateVar.selectedObject);
 	};
 	
 	$scope.show = function(groupName){
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 		var configObj = $rootScope.config[groupName];
-
 		if (configObj.visible){
 			if (configObj.dataSource.promiseResolved) {
 				configObj.layerGroup.addTo($rootScope.map.mapObj);

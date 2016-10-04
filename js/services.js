@@ -5,7 +5,7 @@ angular.module('myApp').service('SPARQLService', function($http) {
 });
 
 
-angular.module('myApp').service('Utilities', function($http) {		
+angular.module('myApp').service('Utilities', function($http,$rootScope) {		
 	this.generateDescription = function (description,binding){
 		if (description.length > 0){
 			str = description;
@@ -51,4 +51,17 @@ angular.module('myApp').service('Utilities', function($http) {
 		}
 		return newName;
 	};
+
+	this.getHexColor = function (){
+		
+		if (!$rootScope.hexColor){
+			$rootScope.hexColor = [];
+		}
+		var hexColor = Math.random().toString(16).slice(2, 8).toUpperCase();
+		while ($rootScope.hexColor.indexOf(hexColor) != -1){
+			hexColor = Math.random().toString(16).slice(2, 8).toUpperCase();
+		}
+		$rootScope.hexColor.push(hexColor);
+		return hexColor;
+	}
 });
