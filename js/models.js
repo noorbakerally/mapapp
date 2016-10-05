@@ -167,21 +167,28 @@ models.Layer.prototype.show = function () {
 				var layerDataItem = this.dataItems[layerDataItemCounter];
 				
 				var areaRestrictors = this.map.areaRestrictor;
-				var show = true;
+				
 
 				//validating all areas
 				for (var aRCounter in areaRestrictors){
+					var show = false;
 					var areaRestrictor = areaRestrictors[aRCounter];
 					if (!areaRestrictor.dataItems) continue;
 					for (var dataItemCounter in areaRestrictor.dataItems){
 						var dataItem = areaRestrictor.dataItems[dataItemCounter];
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-						console.log(dataItem);
-						if (!Utilities.isMarkerInsidePolygon(layerDataItem[layerDataItem.latCol],layerDataItem[layerDataItem.longCol],dataItem.layer)){
-							console.log("enters here");
-							show = false;
-						} 
+						if (Utilities.isMarkerInsidePolygon(layerDataItem[layerDataItem.latCol],layerDataItem[layerDataItem.longCol],dataItem.layer)){
+							show = true;
+							layerDataItem.show(true);
+							this.itemsVisible.push(layerDataItem);
+							break;
+						} else {
+							layerDataItem.show(false);
+							if (this.itemsVisible && this.itemsVisible.indexOf(layerDataItem) != -1){
+								this.itemsVisible.pop(layerDataItem);
+							}
+						}
 						/*
 						if (Utilities.isPolygonInsidePolygon(layerDataItem.layer,dataItem.layer)){
 							console.log("show");
@@ -189,10 +196,9 @@ models.Layer.prototype.show = function () {
 							this.itemsVisible.push(layerDataItem);
 						} */
 					}
-				}
-				if (show){
-					layerDataItem.show(show);
-					this.itemsVisible.push(layerDataItem);
+					if (show){
+						continue;
+					}
 				}
 			}
 		}
