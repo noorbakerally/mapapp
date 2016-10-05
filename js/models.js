@@ -163,6 +163,9 @@ models.MarkerLayer.prototype.getIconURL = function (){
 	if (!this.url && !this.color){
 		this.color = Utilities.getHexColor();
 		this.url = this.defaultMarkerURL+this.color;
+	} else if (!this.url){
+		this.color = this.color.replace("#","");
+		this.url = this.defaultMarkerURL+this.color;
 	}
 	return this.url;
 }
@@ -296,6 +299,9 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				}
 			}
 			vectorDateItem.map = map;
+			if (layer.setIcon && confObj.getIconURL) {
+				layer.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
+			}
 			vectorDateItem.layer = layer;
 			if (confObj.descriptionMarkUp){
 				var dataItemDescription = vectorDateItem.getDescription(confObj.descriptionMarkUp);
