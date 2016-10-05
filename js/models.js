@@ -299,7 +299,9 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				}
 			}
 			vectorDateItem.map = map;
-			layer.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
+			if (layer.setIcon && confObj.getIconURL) {
+				layer.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
+			}
 			vectorDateItem.layer = layer;
 			if (confObj.descriptionMarkUp){
 				var dataItemDescription = vectorDateItem.getDescription(confObj.descriptionMarkUp);

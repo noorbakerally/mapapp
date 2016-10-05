@@ -1,5 +1,11 @@
 angular.module('myApp').service('SPARQLService', function($http) {		
 	this.query = function (url,query){
+		if (url.indexOf(".json") != -1){
+			promise = $http.get("http://ci.emse.fr/jena_service/getjson.php?url="+url);
+			promise.then(function(data){console.log(data);});
+			return promise;
+		}
+
 		return $http.get(url+"?format=application%2Fsparql-results%2Bjson&query="+query);
 	};
 });
