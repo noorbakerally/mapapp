@@ -246,7 +246,7 @@ angular.module('myApp').controller('initController', function($scope,$rootScope,
 	}
 
 	// for all default dataConfURIs
-	var dataConfURIs = ["http://localhost:8000/data2.conf"];
+	var dataConfURIs = ["https://raw.githubusercontent.com/noorbakerally/EGC2017ConfigurationFile/master/data5.conf"];
 	if ($routeParams.dataConfURI && $routeParams.dataConfURI.constructor == Array){
 		dataConfURIs = dataConfURIs.concat($routeParams.dataConfURI);
 	} else if ($routeParams.dataConfURI){
