@@ -124,6 +124,15 @@ models.Layer = function (name,description,color,url,visible,layerGroup,dataSourc
 	this.layerGroup = layerGroup;
 	this.dataSource = dataSource;
 }
+models.Layer.prototype.addDataItem = function (dataItem) {
+	if (!this.dataItems){
+		this.dataItems = [];
+	}
+	this.dataItems.push(dataItem);
+	dataItem.LayerGroup = this;
+};
+
+
 models.Layer.prototype.getColumnName = function (originalName) {
 		
 	if (!this.dataSource.filterDescription){
@@ -139,16 +148,67 @@ models.Layer.prototype.getColumnName = function (originalName) {
 	return Utilities.getURLFragment(originalName);
 };
 models.Layer.prototype.show = function () {
+	this.itemsVisible = [];
 	if (this.dataSource.promiseResolved) {
-		this.layerGroup.addTo(this.map.mapObj);
+		if (this.map.areaRestrictor && this.map.areaRestrictor.length > 0){
+
+			var areaRestrictors = this.map.areaRestrictor;
+			//if the layer being show in inside the arearestrictors
+			//does not perform constraints validation and show
+			console.log("==================");
+			console.log(areaRestrictors);
+			console.log(this);
+			console.log("==================");
+			if (areaRestrictors.indexOf(this) != -1){
+				this.layerGroup.addTo(this.map.mapObj);
+				return;
+			}
+
+
+			for(var layerDataItemCounter in this.dataItems){
+				var layerDataItem = this.dataItems[layerDataItemCounter];
+				
+				var areaRestrictors = this.map.areaRestrictor;
+				for (var aRCounter in areaRestrictors){
+					var areaRestrictor = areaRestrictors[aRCounter];
+					if (!areaRestrictor.dataItems) continue;
+					for (var dataItemCounter in areaRestrictor.dataItems){
+						var dataItem = areaRestrictor.dataItems[dataItemCounter];
+						if (!dataItem.visible) continue;
+						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
+						if (Utilities.isMarkerInsidePolygon(layerDataItem[layerDataItem.latCol],layerDataItem[layerDataItem.longCol],dataItem.layer)){
+							layerDataItem.show(true);
+							this.itemsVisible.push(layerDataItem);
+						} 
+
+						/*
+						if (Utilities.isPolygonInsidePolygon(layerDataItem.layer,dataItem.layer)){
+							console.log("show");
+							layerDataItem.show(true);
+							this.itemsVisible.push(layerDataItem);
+						} */
+
+
+
+					}
+				}
+			}
+		}
+		else {
+			this.layerGroup.addTo(this.map.mapObj);
+		}
 	} else {
-		console.log("ttest");
 		this.dataSource.getDataItems(this.map,this);
 	}
 };
 
 models.Layer.prototype.hide = function () {
 	this.map.mapObj.removeLayer(this.layerGroup);
+	if (this.itemsVisible){
+		angular.forEach(this.itemsVisible,function(dataItem){
+			dataItem.show(false);
+		});
+	}
 	this.visible = false;
 };
 
@@ -335,6 +395,7 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 					vectorDateItem.layer.bindPopup(dataItemDescription);
 				}
 			}
+			vectorDateItem.visible = true;
 			confObj.dataItems.push(vectorDateItem);
 
 		}
@@ -435,7 +496,7 @@ models.SPARQLDataSource.prototype.getDataItems = function(map,confObj){
 models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj){
 
 	this.promise.then(function (answer){
-		confObj.dataItems = [];
+		
 		confObj.cols = {};
 		this.sparqlResult = answer.data;
 		var bindings = answer.data.results.bindings;
@@ -472,7 +533,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			dataItem.layer = currentMarker;
 			dataItem.map = map;
 			markers.push(currentMarker);
-			confObj.dataItems.push(dataItem); 
+			confObj.addDataItem(dataItem); 
 		}
 		confObj.layerGroup = L.layerGroup(markers);
 		confObj.dataSource.promiseResolved = true;

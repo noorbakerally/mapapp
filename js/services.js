@@ -39,6 +39,34 @@ angular.module('myApp').service('Utilities', function($http,$rootScope) {
 		return newStr;
 	};
 
+	this.isMarkerInsidePolygon = function (x,y, poly) {
+	    var polyPoints = poly.getLatLngs()[0];       
+	    var inside = false;
+	    for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+	        var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+	        var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
+
+	        var intersect = ((yi > y) != (yj > y))
+	            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+	        if (intersect) inside = !inside;
+	    }
+	    return inside;
+	};
+	this.isPolygonInsidePolygon = function (innerPoly, poly) {
+	    var polyPoints = innerPoly.getLatLngs()[0];       
+	    for (var i = 0; i < polyPoints.length; i++){
+	    	var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+	    	if (!this.isMarkerInsidePolygon(xi,yi,poly)){
+	    		return false;
+	    	}
+	    }
+	    
+	    return true;
+
+
+
+	};
+
 
 	this.getURLFragment = function (newName){
 		var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
