@@ -96,6 +96,9 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 		}
 
 	}
+	if (newConfig.constraints){
+		newLayerConfig.constraints = newConfig.constraints;
+	}
 	newLayerConfig.map = this;
 	return newLayerConfig;
 }
@@ -150,10 +153,7 @@ models.Layer.prototype.getColumnName = function (originalName) {
 models.Layer.prototype.show = function () {
 	this.itemsVisible = [];
 	if (this.dataSource.promiseResolved) {
-
-
-
-		if (this.map.areaRestrictor && this.map.areaRestrictor.length > 0){
+		if (this.map.areaRestrictor && this.map.areaRestrictor.length > 0 && this.constraints && this.constraints.indexOf("AreaRestrictor") != -1 ){
 			var areaRestrictors = this.map.areaRestrictor;
 			//if the layer being show in inside the arearestrictors
 			//does not perform constraints validation and show
@@ -165,10 +165,7 @@ models.Layer.prototype.show = function () {
 
 			for(var layerDataItemCounter in this.dataItems){
 				var layerDataItem = this.dataItems[layerDataItemCounter];
-				
 				var areaRestrictors = this.map.areaRestrictor;
-				
-
 				//validating all areas
 				for (var aRCounter in areaRestrictors){
 					var show = false;
