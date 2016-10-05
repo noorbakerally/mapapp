@@ -137,16 +137,16 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	
 	$scope.show = function(groupName){
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
-		var configObj = $rootScope.config[groupName];
-		if (configObj.visible){
-			if (configObj.dataSource.promiseResolved) {
-				configObj.layerGroup.addTo($rootScope.map.mapObj);
+		var layer = $rootScope.config[groupName];
+		if (layer.visible){
+			if (layer.dataSource.promiseResolved) {
+				layer.layerGroup.addTo($rootScope.map.mapObj);
 			} else {
-				configObj.dataSource.getDataItems($rootScope.map,configObj);
+				layer.dataSource.getDataItems($rootScope.map,layer);
 			}
 		} else {
-			$rootScope.map.mapObj.removeLayer(configObj.layerGroup);
-			configObj.visible = false;
+			$rootScope.map.mapObj.removeLayer(layer.layerGroup);
+			layer.visible = false;
 		}
 
 	}

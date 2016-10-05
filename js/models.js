@@ -104,7 +104,7 @@ models.GoogleMap.prototype.loadMap = function (){
     this.mapObj = mymap;
 }
 
-models.LayerConfig = function (name,description,color,url,visible,layerGroup,dataSource){
+models.Layer = function (name,description,color,url,visible,layerGroup,dataSource){
 	this.name = name;
 	this.description = description;
 	this.color = color;
@@ -113,7 +113,7 @@ models.LayerConfig = function (name,description,color,url,visible,layerGroup,dat
 	this.layerGroup = layerGroup;
 	this.dataSource = dataSource;
 }
-models.LayerConfig.prototype.getColumnName = function (originalName) {
+models.Layer.prototype.getColumnName = function (originalName) {
 		
 	if (!this.dataSource.filterDescription){
 		return Utilities.getURLFragment(originalName);
@@ -128,7 +128,7 @@ models.LayerConfig.prototype.getColumnName = function (originalName) {
 	return Utilities.getURLFragment(originalName);
 };
 
-models.LayerConfig.prototype.getGraphics = function () {
+models.Layer.prototype.getGraphics = function () {
 	var obj = {};
 	if (this.getIconURL){
 		this.getIconURL();
@@ -149,14 +149,14 @@ models.LayerConfig.prototype.getGraphics = function () {
 };
 
 models.MarkerLayer = function (name,description,color,url,visible,layerGroup,latCol,longCol,desc){
-	models.LayerConfig.call(this);
+	models.Layer.call(this);
 	this.latCol = latCol;
 	this.longCol = longCol;
 	this.descriptionMarkUp = desc;
 	this.defaultMarkerURL = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|";
 }
 
-models.MarkerLayer.prototype = Object.create(models.LayerConfig.prototype);
+models.MarkerLayer.prototype = Object.create(models.Layer.prototype);
 models.MarkerLayer.constructor = models.MarkerLayer;
 
 models.MarkerLayer.prototype.getIconURL = function (){
@@ -186,7 +186,7 @@ models.VectorLayer = function (){
 	this.vectorLayerOptions.color = "#"+Utilities.getHexColor();
 
 }
-models.VectorLayer.prototype = Object.create(models.LayerConfig.prototype);
+models.VectorLayer.prototype = Object.create(models.Layer.prototype);
 models.VectorLayer.constructor = models.VectorLayer;
 
 
