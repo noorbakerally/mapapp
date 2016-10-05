@@ -139,14 +139,9 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 		var layer = $rootScope.config[groupName];
 		if (layer.visible){
-			if (layer.dataSource.promiseResolved) {
-				layer.layerGroup.addTo($rootScope.map.mapObj);
-			} else {
-				layer.dataSource.getDataItems($rootScope.map,layer);
-			}
+			layer.show();
 		} else {
-			$rootScope.map.mapObj.removeLayer(layer.layerGroup);
-			layer.visible = false;
+			layer.hide();
 		}
 
 	}

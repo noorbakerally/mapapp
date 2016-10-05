@@ -86,6 +86,7 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 		newLayerConfig.dataSource.getDataItems(this,newLayerConfig);
 		newLayerConfig.visible = true;
 	}
+	newLayerConfig.map = this;
 	return newLayerConfig;
 }
 
@@ -127,7 +128,17 @@ models.Layer.prototype.getColumnName = function (originalName) {
 	}
 	return Utilities.getURLFragment(originalName);
 };
-
+models.Layer.prototype.show = function () {
+	if (this.dataSource.promiseResolved) {
+		this.layerGroup.addTo(this.map.mapObj);
+	} else {
+		this.dataSource.getDataItems(this.map,this);
+	}
+};
+models.Layer.prototype.hide = function () {
+	this.map.mapObj.removeLayer(this.layerGroup);
+	this.visible = false;
+};
 models.Layer.prototype.getGraphics = function () {
 	var obj = {};
 	if (this.getIconURL){
