@@ -216,8 +216,10 @@ models.MarkerDataItem.constructor = models.MarkerDataItem;
 models.DataItem.prototype.show = function (visible){
 	if (visible){
 		this.map.mapObj.addLayer(this.layer);
+		this.visible = true;
 	} else {
 		this.map.mapObj.removeLayer(this.layer);
+		this.visible = false;
 	}
 }
 
