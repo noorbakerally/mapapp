@@ -68,8 +68,8 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 		newLayerConfig.dataSource.query = newConfig.dataSource.query;
 	} else if (newConfig.dataSource.type == "RDFDataSource"){
 		newLayerConfig.dataSource = new models.RDFDataSource();
-		//newConfig.dataSource.url = "http://ci.emse.fr/jena_service/run.php?dataset=" + newConfig.dataSource.url;
-		newConfig.dataSource.url = "http://localhost:8000/test.json";
+		newConfig.dataSource.url = "http://ci.emse.fr/jena_service/run.php?dataset=" + newConfig.dataSource.url;
+		//newConfig.dataSource.url = "http://localhost:8000/test.json";
 	}
 
 	//setting data source options
