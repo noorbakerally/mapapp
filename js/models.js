@@ -150,15 +150,13 @@ models.Layer.prototype.getColumnName = function (originalName) {
 models.Layer.prototype.show = function () {
 	this.itemsVisible = [];
 	if (this.dataSource.promiseResolved) {
-		if (this.map.areaRestrictor && this.map.areaRestrictor.length > 0){
 
+
+
+		if (this.map.areaRestrictor && this.map.areaRestrictor.length > 0){
 			var areaRestrictors = this.map.areaRestrictor;
 			//if the layer being show in inside the arearestrictors
 			//does not perform constraints validation and show
-			console.log("==================");
-			console.log(areaRestrictors);
-			console.log(this);
-			console.log("==================");
 			if (areaRestrictors.indexOf(this) != -1){
 				this.layerGroup.addTo(this.map.mapObj);
 				return;
@@ -169,6 +167,9 @@ models.Layer.prototype.show = function () {
 				var layerDataItem = this.dataItems[layerDataItemCounter];
 				
 				var areaRestrictors = this.map.areaRestrictor;
+				var show = true;
+
+				//validating all areas
 				for (var aRCounter in areaRestrictors){
 					var areaRestrictor = areaRestrictors[aRCounter];
 					if (!areaRestrictor.dataItems) continue;
@@ -176,24 +177,28 @@ models.Layer.prototype.show = function () {
 						var dataItem = areaRestrictor.dataItems[dataItemCounter];
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-						if (Utilities.isMarkerInsidePolygon(layerDataItem[layerDataItem.latCol],layerDataItem[layerDataItem.longCol],dataItem.layer)){
-							layerDataItem.show(true);
-							this.itemsVisible.push(layerDataItem);
+						console.log(dataItem);
+						if (!Utilities.isMarkerInsidePolygon(layerDataItem[layerDataItem.latCol],layerDataItem[layerDataItem.longCol],dataItem.layer)){
+							console.log("enters here");
+							show = false;
 						} 
-
 						/*
 						if (Utilities.isPolygonInsidePolygon(layerDataItem.layer,dataItem.layer)){
 							console.log("show");
 							layerDataItem.show(true);
 							this.itemsVisible.push(layerDataItem);
 						} */
-
-
-
 					}
+				}
+				if (show){
+					layerDataItem.show(show);
+					this.itemsVisible.push(layerDataItem);
 				}
 			}
 		}
+
+
+
 		else {
 			this.layerGroup.addTo(this.map.mapObj);
 		}
