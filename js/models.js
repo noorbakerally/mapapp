@@ -97,7 +97,6 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 
 	}
 	newLayerConfig.map = this;
-	console.log(this);
 	return newLayerConfig;
 }
 
@@ -143,13 +142,16 @@ models.Layer.prototype.show = function () {
 	if (this.dataSource.promiseResolved) {
 		this.layerGroup.addTo(this.map.mapObj);
 	} else {
+		console.log("ttest");
 		this.dataSource.getDataItems(this.map,this);
 	}
 };
+
 models.Layer.prototype.hide = function () {
 	this.map.mapObj.removeLayer(this.layerGroup);
 	this.visible = false;
 };
+
 models.Layer.prototype.getGraphics = function () {
 	var obj = {};
 	if (this.getIconURL){
@@ -338,7 +340,8 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 		}
 
 		confObj.layerGroup = L.geoJson(geoJSONObject,options);
-		confObj.layerGroup.addTo(map.mapObj);
+		confObj.dataSource.promiseResolved = true;
+		confObj.show();
 	},function (error){});
 }
 
@@ -407,7 +410,8 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 			confObj.dataItems.push(dataItem); 
 		}
 		confObj.layerGroup = L.layerGroup(markers);
-		confObj.layerGroup.addTo(map.mapObj);
+		confObj.dataSource.promiseResolved = true;
+		confObj.show();
 
 
 	});
@@ -471,7 +475,8 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			confObj.dataItems.push(dataItem); 
 		}
 		confObj.layerGroup = L.layerGroup(markers);
-		confObj.layerGroup.addTo(map.mapObj);
+		confObj.dataSource.promiseResolved = true;
+		confObj.show();
 	},
 	function (error){
 	
