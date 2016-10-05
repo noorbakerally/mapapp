@@ -164,6 +164,7 @@ models.MarkerLayer.prototype.getIconURL = function (){
 		this.color = Utilities.getHexColor();
 		this.url = this.defaultMarkerURL+this.color;
 	} else if (!this.url){
+		this.color = this.color.replace("#","");
 		this.url = this.defaultMarkerURL+this.color;
 	}
 	return this.url;
