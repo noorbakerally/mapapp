@@ -86,7 +86,18 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 		newLayerConfig.dataSource.getDataItems(this,newLayerConfig);
 		newLayerConfig.visible = true;
 	}
+
+	if (newConfig.useAs){
+		if (newConfig.useAs == "AreaRestrictor"){
+			if (!this.areaRestrictor){
+				this.areaRestrictor = [];
+			}
+			this.areaRestrictor.push(newLayerConfig);
+		}
+
+	}
 	newLayerConfig.map = this;
+	console.log(this);
 	return newLayerConfig;
 }
 

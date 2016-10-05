@@ -79,9 +79,6 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 					} else {
 						showItem = true;	
 					}
-
-					
-					
 				} else {
 					showItem = true;
 				}
