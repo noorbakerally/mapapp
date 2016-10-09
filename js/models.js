@@ -99,6 +99,11 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 	if (newConfig.constraints){
 		newLayerConfig.constraints = newConfig.constraints;
 	}
+	
+	if (newConfig.options){
+		newLayerConfig.options = newConfig.options;
+	}
+	
 	newLayerConfig.map = this;
 	return newLayerConfig;
 }
@@ -310,6 +315,7 @@ models.DataItem.prototype.setIconURL = function (iconURL){
         this.layer.setIcon(L.icon({iconUrl:iconURL}));
 };
 models.DataItem.prototype.loadOptions = function (){
+	console.log(this);
     try {
         eval(this.layerGroup.options.itemOptions.codesBefore);
         if (this.layerGroup.options.itemOptions.conditions){
@@ -325,7 +331,7 @@ models.DataItem.prototype.loadOptions = function (){
     } catch (err) {
 
     }
-    console.log(this);
+    
     
     var dataItemDescription = this.getDescription(this.layerGroup.itemDescription);
     if (dataItemDescription.length > 0){
