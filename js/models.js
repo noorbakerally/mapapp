@@ -132,7 +132,8 @@ models.Layer.prototype.addDataItem = function (dataItem) {
 		this.dataItems = [];
 	}
 	this.dataItems.push(dataItem);
-	dataItem.LayerGroup = this;
+	dataItem.layerGroup = this;
+	dataItem.loadOptions();
 };
 
 
@@ -308,7 +309,31 @@ models.DataItem.prototype.show = function (visible){
 models.DataItem.prototype.setIconURL = function (iconURL){
         this.layer.setIcon(L.icon({iconUrl:iconURL}));
 };
+models.DataItem.prototype.loadOptions = function (){
+    try {
+        eval(this.layerGroup.options.itemOptions.codesBefore);
+        if (this.layerGroup.options.itemOptions.conditions){
+            for (var condCounter in this.layerGroup.options.itemOptions.conditions){
+                var condition = this.layerGroup.options.itemOptions.conditions[condCounter];
+                if (eval(condition.condition)){
+                    if (condition.action.iconURL){
+                            this.setIconURL(condition.action.iconURL);
+                    }
+                }
+            }
+        }
+    } catch (err) {
 
+    }
+    console.log(this);
+    if (this.layerGroup.itemDescription){
+        var dataItemDescription = this.getDescription(this.layerGroup.itemDescription);
+        if (dataItemDescription.length > 0){
+                this.layer.bindPopup(dataItemDescription);
+        }
+    }
+
+};
 models.DataItem.prototype.getDescription = function(desc){
 	if (desc == "none" || !desc){
             return null;
@@ -430,14 +455,8 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				layer.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			}
 			vectorDateItem.layer = layer;
-			if (confObj.itemDescription){
-				var dataItemDescription = vectorDateItem.getDescription(confObj.itemDescription);
-				if (dataItemDescription.length > 0){
-					vectorDateItem.layer.bindPopup(dataItemDescription);
-				}
-			}
 			vectorDateItem.visible = true;
-			confObj.dataItems.push(vectorDateItem);
+			confObj.addDataItem(vectorDateItem);
 
 		}
 
@@ -501,7 +520,7 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 			dataItems[subject] = dataItem;
 		}
 
-		
+		//to verify !! why this second loop
 		for (var dataItemCounter in dataItems){
 			var dataItem = dataItems[dataItemCounter];
 			var currentMarker = L.marker([dataItem[dataItem.latCol][0], dataItem[dataItem.longCol][0]]);
@@ -509,8 +528,9 @@ models.RDFDataSource.prototype.getDataItems = function(map,confObj){
 			dataItem.layer = currentMarker;
 			dataItem.map = map;
 			markers.push(currentMarker);
-			confObj.dataItems.push(dataItem); 
+			confObj.addDataItem(dataItem);
 		}
+
 		confObj.layerGroup = L.layerGroup(markers);
 		confObj.dataSource.promiseResolved = true;
 		confObj.show();
@@ -559,17 +579,20 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 					} else {
 						confObj.cols[answer.data.head.vars[col]] = [];
 					}
+
+					if (!confObj.cols[answer.data.head.vars[col]]){
+                        confObj.cols[answer.data.head.vars[col]] = [];
+                    }
+                    if (confObj.cols[answer.data.head.vars[col]].indexOf(currentBind[answer.data.head.vars[col]].value) == -1){
+                    	confObj.cols[answer.data.head.vars[col]].push(currentBind[answer.data.head.vars[col]].value);
+                    }
+
 				}
 			}
 			dataItem[confObj.latCol] = currentBind[confObj.latCol].value;
 			dataItem[confObj.longCol] = currentBind[confObj.longCol].value;
 			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
 			
-
-			var dataItemDescription = dataItem.getDescription(confObj.itemDescription);
-			if (dataItemDescription.length > 0){
-				currentMarker.bindPopup(dataItemDescription);
-			}
 			currentMarker.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			dataItem.layer = currentMarker;
 			dataItem.map = map;
