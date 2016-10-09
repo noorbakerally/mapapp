@@ -63,11 +63,10 @@ angular.module('myApp').controller('GroupViewerController', function($scope,$roo
 angular.module('myApp').controller('oneGroupItemsController', function($scope,$rootScope) {
 	$scope.applyFilter = function (){
 		//columnVal holding the selected values in the selected dropdown lists
+		var selectedObject = $scope.$parent.updateVar.selectedObject;
 		var keys = Object.keys($scope.$parent.updateVar.columnVal);
-		var markers = [];
-		$scope.$parent.updateVar.selectedObject.hide();
-		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
-			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
+		for (var dataItemCounter in selectedObject.dataItems){
+			var currentDateItem = selectedObject.dataItems[dataItemCounter];
 			var showItem = true;
 			for (var key in keys) {
 				var currentColumn = $scope.$parent.updateVar.columnVal[keys[key]];
@@ -85,12 +84,9 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 					showItem = true;
 				}
 			} 
-			if (showItem){
-				markers.push(currentDateItem.layer);
-			}
 			currentDateItem.visible = showItem;
 		}
-		$scope.$parent.updateVar.selectedObject.show(2);
+		selectedObject.show(2);
 
 	}
 

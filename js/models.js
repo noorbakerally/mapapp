@@ -159,15 +159,12 @@ models.Layer.prototype.getColumnName = function (originalName) {
 models.Layer.prototype.show = function (flag) {
 	this.itemsVisible = [];
 	this.loading = true;
-	console.log("showing layer");
 	if (this.dataSource.promiseResolved) {
 		if (this.map.areaRestrictor && this.map.areaRestrictor.length > 0 && this.constraints && this.constraints.indexOf("AreaRestrictor") != -1 ){
 			var areaRestrictors = this.map.areaRestrictor;
 			//if the layer being show in inside the arearestrictors
 			//does not perform constraints validation and show
-			console.log("1nd");
 			if (areaRestrictors.indexOf(this) != -1){
-				console.log("1.1nd");
 				this.layerGroup.addTo(this.map.mapObj);
 				this.loading = false;
 				return;
@@ -175,26 +172,19 @@ models.Layer.prototype.show = function (flag) {
 
 			var markers = [];
 			for(var layerDataItemCounter in this.dataItems){
-				console.log("1.3nd");
 				var layerDataItem = this.dataItems[layerDataItemCounter];
 				var areaRestrictors = this.map.areaRestrictor;
 				//validating all areas
 				for (var aRCounter in areaRestrictors){
-					console.log("going through all restrictors");
 					var show = false;
 					var areaRestrictor = areaRestrictors[aRCounter];
 					if (!areaRestrictor.dataItems) continue;
-					console.log("going through all restrictors data item");
 					for (var dataItemCounter in areaRestrictor.dataItems){
 						var dataItem = areaRestrictor.dataItems[dataItemCounter];
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-						console.log("validating inside polygon");
-						console.log(layerDataItem.getLat());
 						if (Utilities.isMarkerInsidePolygon(layerDataItem.getLat(),layerDataItem.getLong(),dataItem.layer)){
-							console.log("is inside polygon");
 							if (flag && flag==2){
-								console.log("enters flag ");
 								if (layerDataItem.visible){
 									show = true;
 									layerDataItem.visible = true;
@@ -203,7 +193,6 @@ models.Layer.prototype.show = function (flag) {
 									break;
 								}
 							} else {
-								console.log("enters constraint shhow");
 								show = true;
 								layerDataItem.visible = true;
 								this.itemsVisible.push(layerDataItem);
@@ -236,7 +225,6 @@ models.Layer.prototype.show = function (flag) {
 			this.visible = true;
 		}
 		else {
-			console.log(flag);
 			var markers = [];
 			angular.forEach(this.dataItems,function(dataItem){
 			    if (flag == 1){
@@ -253,6 +241,7 @@ models.Layer.prototype.show = function (flag) {
 	        	    }
 			    }
             });
+            this.hide();
             this.layerGroup = L.layerGroup(markers);
 			this.layerGroup.addTo(this.map.mapObj);
 			this.itemsVisible = this.dataItems;
