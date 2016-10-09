@@ -55,7 +55,7 @@ models.Map.prototype.loadLayer = function (newConfig,SPARQLService) {
 	//add if if error
 	newLayerConfig.latCol = newConfig.latCol;
 	newLayerConfig.longCol = newConfig.longCol;
-	newLayerConfig.descriptionMarkUp = newConfig.descriptionMarkUp;
+	newLayerConfig.itemDescription = newConfig.itemDescription;
 	//====
 	newLayerConfig.name = newConfig.name;
 	newLayerConfig.description = newConfig.description;
@@ -246,7 +246,7 @@ models.MarkerLayer = function (name,description,color,url,visible,layerGroup,lat
 	models.Layer.call(this);
 	this.latCol = latCol;
 	this.longCol = longCol;
-	this.descriptionMarkUp = desc;
+	this.itemDescription = desc;
 	this.defaultMarkerURL = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|";
 }
 
@@ -305,31 +305,62 @@ models.DataItem.prototype.show = function (visible){
 		this.visible = false;
 	}
 }
+models.DataItem.prototype.setIconURL = function (iconURL){
+        this.layer.setIcon(L.icon({iconUrl:iconURL}));
+};
 
 models.DataItem.prototype.getDescription = function(desc){
-	if (desc.length > 0){
-		str = desc;
-		ostr = desc;
-		newStr = "";
-		i=0;l=0;g=0;
-		while (i< ostr.length){
-		   l = str.indexOf("<");
-		   if (l==-1) {
-		     newStr = newStr + str;
-		     break;
-		   };
-		   g = str.indexOf(">");  
-		   partStr = str.substring(l+1,g);
-		   if (partStr in this){
-		   		newStr = newStr + str.substring(0,l) + this[partStr];
-			   str = str.substring(g+1,str.length);
-			   i = g;  
-		   } else {
-		   		continue;
-		   }
-		}
-	}
-	return newStr;
+	if (desc == "none" || !desc){
+            return null;
+        } else if (desc == "default"){
+            var objectKeys = Object.keys(this);
+            var excludeKeys = ["layer","layerGroup","latCol","longCol","map"];
+            var strDescription = "";
+
+            var labels;
+            try {
+                    labels = this.layerGroup.dataSource.filterDescription.labels;
+            } catch  (err){
+
+            }
+            for (var keyCounter in objectKeys){
+                    var currentKey = objectKeys[keyCounter];
+                    if (excludeKeys.indexOf(currentKey) != -1) continue;
+                    currentKeyStr = currentKey;
+                    if (labels && labels[currentKey]){
+                            currentKeyStr = labels[currentKey];
+                    }
+                    currentKeyStr = Utilities.getURLFragment(currentKeyStr);
+                    strDescription = strDescription + " " +currentKeyStr+"="+this[currentKey]+";";
+            }
+
+
+            return strDescription;
+        } else {
+            if (desc.length > 0){
+                    str = desc;
+                    ostr = desc;
+                    newStr = "";
+                    i=0;l=0;g=0;
+                    while (i< ostr.length){
+                       l = str.indexOf("<");
+                       if (l==-1) {
+                         newStr = newStr + str;
+                         break;
+                       };
+                       g = str.indexOf(">");
+                       partStr = str.substring(l+1,g);
+                       if (partStr in this){
+                                    newStr = newStr + str.substring(0,l) + this[partStr];
+                               str = str.substring(g+1,str.length);
+                               i = g;
+                       } else {
+                                    continue;
+                       }
+                    }
+            }
+        }
+        return newStr;
 }
 
 models.VectorDataItem = function(){
@@ -399,8 +430,8 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 				layer.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			}
 			vectorDateItem.layer = layer;
-			if (confObj.descriptionMarkUp){
-				var dataItemDescription = vectorDateItem.getDescription(confObj.descriptionMarkUp);
+			if (confObj.itemDescription){
+				var dataItemDescription = vectorDateItem.getDescription(confObj.itemDescription);
 				if (dataItemDescription.length > 0){
 					vectorDateItem.layer.bindPopup(dataItemDescription);
 				}
@@ -535,7 +566,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			var currentMarker = L.marker([dataItem[dataItem.latCol], dataItem[dataItem.longCol]]);
 			
 
-			var dataItemDescription = dataItem.getDescription(confObj.descriptionMarkUp);
+			var dataItemDescription = dataItem.getDescription(confObj.itemDescription);
 			if (dataItemDescription.length > 0){
 				currentMarker.bindPopup(dataItemDescription);
 			}
