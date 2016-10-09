@@ -233,7 +233,7 @@ models.Layer.prototype.show = function (flag) {
 			}
 			this.layerGroup = L.layerGroup(markers);
 			this.layerGroup.addTo(this.map.mapObj);
-
+			this.visible = true;
 		}
 		else {
 			console.log(flag);
