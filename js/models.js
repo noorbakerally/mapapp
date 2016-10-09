@@ -326,18 +326,18 @@ models.DataItem.prototype.loadOptions = function (){
 
     }
     console.log(this);
-    if (this.layerGroup.itemDescription){
-        var dataItemDescription = this.getDescription(this.layerGroup.itemDescription);
-        if (dataItemDescription.length > 0){
-                this.layer.bindPopup(dataItemDescription);
-        }
+    
+    var dataItemDescription = this.getDescription(this.layerGroup.itemDescription);
+    if (dataItemDescription.length > 0){
+            this.layer.bindPopup(dataItemDescription);
     }
+    
 
 };
 models.DataItem.prototype.getDescription = function(desc){
-	if (desc == "none" || !desc){
+	if (desc == "none"){
             return null;
-        } else if (desc == "default"){
+        } else if (!desc || desc == "default"){
             var objectKeys = Object.keys(this);
             var excludeKeys = ["layer","layerGroup","latCol","longCol","map"];
             var strDescription = "";
