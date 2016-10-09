@@ -64,6 +64,8 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 	$scope.applyFilter = function (){
 		//columnVal holding the selected values in the selected dropdown lists
 		var keys = Object.keys($scope.$parent.updateVar.columnVal);
+		var markers = [];
+		$scope.$parent.updateVar.selectedObject.hide();
 		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
 			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
 			var showItem = true;
@@ -83,16 +85,21 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 					showItem = true;
 				}
 			} 
-			currentDateItem.show(showItem);
+			if (showItem){
+				markers.push(currentDateItem.layer);
+			}
+			currentDateItem.visible = showItem;
 		}
+		$scope.$parent.updateVar.selectedObject.show(2);
+
 	}
 
 	$scope.clearFilter = function (){
-		
-		for (var dataItemCounter in $scope.$parent.updateVar.selectedObject.dataItems){
-			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
-			currentDateItem.show(true);
-		}
+		angular.forEach($scope.$parent.updateVar.selectedObject.dataItems,function(dataItem){
+               dataItem.visible =true;
+        });
+		$scope.$parent.updateVar.selectedObject.show();
+		console.log($scope.$parent.updateVar.selectedObject);
 		angular.forEach(Object.keys($scope.$parent.updateVar.columnVal),function(col){
         	$scope.$parent.updateVar.columnVal[col] = "none";
         });
@@ -136,12 +143,11 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	};
 	
 	$scope.show = function(groupName){
-
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 		var layer = $rootScope.config[groupName];
-		layer.loading = true;
+		//layer.loading = true;
 		if (layer.visible){
-			layer.show();
+			layer.show(1);
 		} else {
 			layer.hide();
 			layer.loading = false;
