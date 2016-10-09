@@ -180,17 +180,20 @@ models.Layer.prototype.show = function (flag) {
 				var areaRestrictors = this.map.areaRestrictor;
 				//validating all areas
 				for (var aRCounter in areaRestrictors){
+					console.log("going through all restrictors");
 					var show = false;
 					var areaRestrictor = areaRestrictors[aRCounter];
 					if (!areaRestrictor.dataItems) continue;
+					console.log("going through all restrictors data item");
 					for (var dataItemCounter in areaRestrictor.dataItems){
 						var dataItem = areaRestrictor.dataItems[dataItemCounter];
-						console.log(dataItem);
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
+						console.log("validating inside polygon");
 						if (Utilities.isMarkerInsidePolygon(layerDataItem[layerDataItem.latCol],layerDataItem[layerDataItem.longCol],dataItem.layer)){
 							
 							if (flag && flag==2){
+								console.log("enters flag ");
 								if (layerDataItem.visible){
 									show = true;
 									layerDataItem.visible = true;
@@ -199,6 +202,7 @@ models.Layer.prototype.show = function (flag) {
 									break;
 								}
 							} else {
+								console.log("enters constraint shhow");
 								show = true;
 								layerDataItem.visible = true;
 								this.itemsVisible.push(layerDataItem);
@@ -235,6 +239,7 @@ models.Layer.prototype.show = function (flag) {
 			var markers = [];
 			angular.forEach(this.dataItems,function(dataItem){
 			    if (flag == 1){
+			    	dataItem.visible = true;
 			   		markers.push(dataItem.layer);
 			    } else if (flag == 2){
 			    	if (dataItem.visible){
