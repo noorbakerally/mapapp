@@ -37,6 +37,8 @@
 		</div>
 		<span ng-show="!$parent.updateVar.cols" class="error">Layer has not been loaded, View layer first</span>
 		<div ng-show="$parent.updateVar.cols">
+			<button ng-click="applyFilter()">Apply Filter</button>
+			<button ng-click="clearFilter()">Clear Filter</button>
 			<table ng-table ="colsTable" class="table table-striped">
 				<tr ng-repeat="col in $parent.updateVar.cols">
 
