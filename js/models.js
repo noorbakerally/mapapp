@@ -180,11 +180,14 @@ models.Layer.prototype.show = function (flag) {
 					var areaRestrictor = areaRestrictors[aRCounter];
 					if (!areaRestrictor.dataItems) continue;
 					for (var dataItemCounter in areaRestrictor.dataItems){
+						console.log(layerDataItem.code + " "+layerDataItem.visible);
 						var dataItem = areaRestrictor.dataItems[dataItemCounter];
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
 						if (Utilities.isMarkerInsidePolygon(layerDataItem.getLat(),layerDataItem.getLong(),dataItem.layer)){
+							
 							if (flag && flag==2){
+								console.log("breaking:"+flag+" "+layerDataItem.code);
 								if (layerDataItem.visible){
 									show = true;
 									layerDataItem.visible = true;
@@ -201,12 +204,15 @@ models.Layer.prototype.show = function (flag) {
 							}
 							
 
-						} else {
+						} 
+						/*
+						else {
+							//console.log("invisible:"+layerDataItem.code);
 							layerDataItem.visible = false;
 							if (this.itemsVisible && this.itemsVisible.indexOf(layerDataItem) != -1){
 								this.itemsVisible.pop(layerDataItem);
 							}
-						}
+						} */
 
 						/*
 						if (Utilities.isPolygonInsidePolygon(layerDataItem.layer,dataItem.layer)){
@@ -220,6 +226,7 @@ models.Layer.prototype.show = function (flag) {
 					}
 				}
 			}
+			this.map.mapObj.removeLayer(this.layerGroup);
 			this.layerGroup = L.layerGroup(markers);
 			this.layerGroup.addTo(this.map.mapObj);
 			this.visible = true;

@@ -68,6 +68,7 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 		for (var dataItemCounter in selectedObject.dataItems){
 			var currentDateItem = selectedObject.dataItems[dataItemCounter];
 			var showItem = true;
+			
 			for (var key in keys) {
 				var currentColumn = $scope.$parent.updateVar.columnVal[keys[key]];
 				//test for all columns
