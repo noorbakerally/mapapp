@@ -93,6 +93,9 @@ angular.module('myApp').controller('oneGroupItemsController', function($scope,$r
 			var currentDateItem = $scope.$parent.updateVar.selectedObject.dataItems[dataItemCounter];
 			currentDateItem.show(true);
 		}
+		angular.forEach(Object.keys($scope.$parent.updateVar.columnVal),function(col){
+        	$scope.$parent.updateVar.columnVal[col] = "none";
+        });
 	}
 });
 
