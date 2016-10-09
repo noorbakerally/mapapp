@@ -358,8 +358,6 @@ models.DataItem.prototype.getDescription = function(desc){
                     currentKeyStr = Utilities.getURLFragment(currentKeyStr);
                     strDescription = strDescription + " " +currentKeyStr+"="+this[currentKey]+";";
             }
-
-
             return strDescription;
         } else {
             if (desc.length > 0){
