@@ -35,6 +35,7 @@
 			<div>{{$parent.updateVar.selectedObject.description}}</div>
 			<div></div>
 		</div>
+		<span ng-show="!$parent.updateVar.cols" class="error">Layer has not been loaded, View layer first</span>
 		<div ng-show="$parent.updateVar.cols">
 			<table ng-table ="colsTable" class="table table-striped">
 				<tr ng-repeat="col in $parent.updateVar.cols">

@@ -133,12 +133,15 @@ angular.module('myApp').controller('OneGroupViewerController', function($scope,$
 	};
 	
 	$scope.show = function(groupName){
+
 		//newConfig.dataSource.getDataItemsWithLatLong(newConfig.latCol,newConfig.longCol);
 		var layer = $rootScope.config[groupName];
+		layer.loading = true;
 		if (layer.visible){
 			layer.show();
 		} else {
 			layer.hide();
+			layer.loading = false;
 		}
 
 	}
