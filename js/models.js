@@ -152,6 +152,7 @@ models.Layer.prototype.getColumnName = function (originalName) {
 };
 models.Layer.prototype.show = function () {
 	this.itemsVisible = [];
+	this.loading = true;
 	if (this.dataSource.promiseResolved) {
 		if (this.map.areaRestrictor && this.map.areaRestrictor.length > 0 && this.constraints && this.constraints.indexOf("AreaRestrictor") != -1 ){
 			var areaRestrictors = this.map.areaRestrictor;
@@ -159,6 +160,7 @@ models.Layer.prototype.show = function () {
 			//does not perform constraints validation and show
 			if (areaRestrictors.indexOf(this) != -1){
 				this.layerGroup.addTo(this.map.mapObj);
+				this.loading = false;
 				return;
 			}
 
@@ -198,13 +200,13 @@ models.Layer.prototype.show = function () {
 					}
 				}
 			}
+
+
 		}
-
-
-
 		else {
 			this.layerGroup.addTo(this.map.mapObj);
 		}
+		this.loading = false;
 	} else {
 		this.dataSource.getDataItems(this.map,this);
 	}
