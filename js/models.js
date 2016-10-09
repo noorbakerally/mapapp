@@ -190,8 +190,9 @@ models.Layer.prototype.show = function (flag) {
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
 						console.log("validating inside polygon");
-						if (Utilities.isMarkerInsidePolygon(layerDataItem[layerDataItem.latCol],layerDataItem[layerDataItem.longCol],dataItem.layer)){
-							
+						console.log(layerDataItem.getLat());
+						if (Utilities.isMarkerInsidePolygon(layerDataItem.getLat(),layerDataItem.getLong(),dataItem.layer)){
+							console.log("is inside polygon");
 							if (flag && flag==2){
 								console.log("enters flag ");
 								if (layerDataItem.visible){
@@ -350,6 +351,15 @@ models.MarkerDataItem = function(latCol,longCol){
 models.MarkerDataItem.prototype = Object.create(models.DataItem.prototype);
 models.MarkerDataItem.constructor = models.MarkerDataItem;
 
+models.MarkerDataItem.prototype.getLat = function(){
+	var point = this.layer.getLatLng();
+	return point.lat
+}
+models.MarkerDataItem.prototype.getLong = function(){
+	var point = this.layer.getLatLng();
+	return point.lng
+}
+
 
 models.DataItem.prototype.show = function (visible){
 	if (visible){
@@ -484,12 +494,18 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 
 		
 		options.onEachFeature = function (feature, layer) {
-			var vectorDateItem = new models.VectorDataItem();
+			var dataItem;
+			if (confObj instanceof models.MarkerLayer){
+				dataItem = new models.MarkerDataItem();
+			} else {
+				dataItem = new models.VectorDataItem();
+			}
+			
 			var properties = feature.properties;
 			var keys = Object.keys(properties);
 			for (var k in keys){
 				var key = keys[k];
-				vectorDateItem[key] = properties[key];
+				dataItem[key] = properties[key];
 				//skipping the item if that item is not in filters
 				if (confObj.dataSource.filterDescription && confObj.dataSource.filterDescription.filters && confObj.dataSource.filterDescription.filters.indexOf(key) == -1) {
 					continue;
@@ -502,13 +518,13 @@ models.GeoJSONDataSource.prototype.getDataItems = function (map,confObj){
 					confObj.cols[key].push(properties[key]);
 				}
 			}
-			vectorDateItem.map = map;
+			dataItem.map = map;
 			if (layer.setIcon && confObj.getIconURL) {
 				layer.setIcon(L.icon({iconUrl:confObj.getIconURL()}));
 			}
-			vectorDateItem.layer = layer;
-			vectorDateItem.visible = true;
-			confObj.addDataItem(vectorDateItem);
+			dataItem.layer = layer;
+			dataItem.visible = true;
+			confObj.addDataItem(dataItem);
 
 		}
 
