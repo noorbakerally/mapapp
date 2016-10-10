@@ -190,25 +190,20 @@ models.Layer.prototype.show = function (flag) {
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
 						if (Utilities.isMarkerInsidePolygon(layerDataItem.getLat(),layerDataItem.getLong(),dataItem.layer)){
-							
 							if (flag && flag==2){
 								if (layerDataItem.visible){
 									show = true;
-									layerDataItem.visible = true;
-									this.itemsVisible.push(layerDataItem);
-									markers.push(layerDataItem.layer);
 									break;
 								}
 							} else {
 								show = true;
 								layerDataItem.visible = true;
-								this.itemsVisible.push(layerDataItem);
-								markers.push(layerDataItem.layer);
 								break;
 							}
-							
-
-						} 
+						} else {
+							show = false;
+							continue;
+						}
 						
 					} //END OF RESTRICTOR ITEMS LOOP
 					if (show){
@@ -217,6 +212,10 @@ models.Layer.prototype.show = function (flag) {
 				
 				} //END OF RESTRICTORS LOOP
 
+				layerDataItem.visible = show;
+				if (show){
+					markers.push(layerDataItem.layer);
+				}
 				//decide whether to show or not here
 			} //END OF LAYERS LOOP
 			this.map.mapObj.removeLayer(this.layerGroup);
