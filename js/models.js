@@ -171,15 +171,21 @@ models.Layer.prototype.show = function (flag) {
 			}
 
 			var markers = [];
+
+			//Layers LOOP
 			for(var layerDataItemCounter in this.dataItems){
 				var layerDataItem = this.dataItems[layerDataItemCounter];
 				var areaRestrictors = this.map.areaRestrictor;
-				//validating all areas
+				
+				//RESTRICTORS LOOP
 				for (var aRCounter in areaRestrictors){
-					var show = false;
+					var show = true;
 					var areaRestrictor = areaRestrictors[aRCounter];
 					if (!areaRestrictor.dataItems) continue;
+
+					//RESTRICTOR ITEMS LOOP
 					for (var dataItemCounter in areaRestrictor.dataItems){
+
 						var dataItem = areaRestrictor.dataItems[dataItemCounter];
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
@@ -203,27 +209,16 @@ models.Layer.prototype.show = function (flag) {
 							
 
 						} 
-						/*
-						else {
-							//console.log("invisible:"+layerDataItem.code);
-							layerDataItem.visible = false;
-							if (this.itemsVisible && this.itemsVisible.indexOf(layerDataItem) != -1){
-								this.itemsVisible.pop(layerDataItem);
-							}
-						} */
-
-						/*
-						if (Utilities.isPolygonInsidePolygon(layerDataItem.layer,dataItem.layer)){
-							console.log("show");
-							layerDataItem.show(true);
-							this.itemsVisible.push(layerDataItem);
-						} */
-					}
+						
+					} //END OF RESTRICTOR ITEMS LOOP
 					if (show){
 						continue;
 					}
-				}
-			}
+				
+				} //END OF RESTRICTORS LOOP
+
+				//decide whether to show or not here
+			} //END OF LAYERS LOOP
 			this.map.mapObj.removeLayer(this.layerGroup);
 			this.layerGroup = L.layerGroup(markers);
 			this.layerGroup.addTo(this.map.mapObj);
