@@ -400,6 +400,7 @@ models.DataItem.prototype.getDescription = function(desc){
             } catch  (err){
 
             }
+            strDescription = "<table border=1>"
             for (var keyCounter in objectKeys){
                     var currentKey = objectKeys[keyCounter];
                     if (excludeKeys.indexOf(currentKey) != -1) continue;
@@ -408,8 +409,9 @@ models.DataItem.prototype.getDescription = function(desc){
                             currentKeyStr = labels[currentKey];
                     }
                     currentKeyStr = Utilities.getURLFragment(currentKeyStr);
-                    strDescription = strDescription + " " +currentKeyStr+"="+this[currentKey]+";";
+                    strDescription = strDescription + "<tr><td style='font-weight:bold'>" +currentKeyStr+"</td><td>"+this[currentKey]+"<td/><tr/>";
             }
+            strDescription = strDescription + "</table>"
             return strDescription;
         } else {
             if (desc.length > 0){
