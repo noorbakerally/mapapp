@@ -179,9 +179,10 @@ models.Layer.prototype.show = function (flag) {
 				
 				//RESTRICTORS LOOP
 				for (var aRCounter in areaRestrictors){
-					var show = true;
+					var show = true ;
 					var areaRestrictor = areaRestrictors[aRCounter];
 					if (!areaRestrictor.dataItems) continue;
+					if (!areaRestrictor.visible) continue;
 
 					//RESTRICTOR ITEMS LOOP
 					for (var dataItemCounter in areaRestrictor.dataItems){
@@ -190,6 +191,7 @@ models.Layer.prototype.show = function (flag) {
 						if (!dataItem.visible) continue;
 						//get marker latitude longitude var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
 						if (Utilities.isMarkerInsidePolygon(layerDataItem.getLat(),layerDataItem.getLong(),dataItem.layer)){
+							console.log("show");
 							if (flag && flag==2){
 								if (layerDataItem.visible){
 									show = true;
@@ -201,13 +203,14 @@ models.Layer.prototype.show = function (flag) {
 								break;
 							}
 						} else {
+							console.log("not show");
 							show = false;
 							continue;
 						}
 						
 					} //END OF RESTRICTOR ITEMS LOOP
-					if (show){
-						continue;
+					if (!show){
+						break;
 					}
 				
 				} //END OF RESTRICTORS LOOP
@@ -391,7 +394,7 @@ models.DataItem.prototype.getDescription = function(desc){
             return null;
         } else if (!desc || desc == "default"){
             var objectKeys = Object.keys(this);
-            var excludeKeys = ["layer","layerGroup","latCol","longCol","map"];
+            var excludeKeys = ["layer","layerGroup","latCol","longCol","map",this.latCol,this.longCol,"visible"];
             var strDescription = "";
 
             var labels;
@@ -404,12 +407,14 @@ models.DataItem.prototype.getDescription = function(desc){
             for (var keyCounter in objectKeys){
                     var currentKey = objectKeys[keyCounter];
                     if (excludeKeys.indexOf(currentKey) != -1) continue;
+                    if (!this[currentKey]) continue;
                     currentKeyStr = currentKey;
                     if (labels && labels[currentKey]){
                             currentKeyStr = labels[currentKey];
                     }
                     currentKeyStr = Utilities.getURLFragment(currentKeyStr);
-                    strDescription = strDescription + "<tr><td style='font-weight:bold'>" +currentKeyStr+"</td><td>"+this[currentKey]+"<td/><tr/>";
+                    value = Utilities.getURLFragment(this[currentKey]);
+                    strDescription = strDescription + "<tr><td style='font-weight:bold'>" +currentKeyStr+"</td><td>"+value+"<td/><tr/>";
             }
             strDescription = strDescription + "</table>"
             return strDescription;
@@ -615,7 +620,7 @@ models.SPARQLDataSource.prototype.getDataItems = function(map,confObj){
 models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj){
 
 	this.promise.then(function (answer){
-		
+		//console.log(answer);
 		confObj.cols = {};
 		this.sparqlResult = answer.data;
 		var bindings = answer.data.results.bindings;
@@ -627,6 +632,7 @@ models.SPARQLDataSource.prototype.getDataItemsWithLatLong = function(map,confObj
 			
 			for (var col in answer.data.head.vars){
 				if (answer.data.head.vars[col] != confObj.latCol && answer.data.head.vars[col] != confObj.longCol ){
+					if (!currentBind[answer.data.head.vars[col]]) {continue;}
 					dataItem[answer.data.head.vars[col]] = currentBind[answer.data.head.vars[col]].value;
 
 					//to change here losing one value

@@ -79,7 +79,7 @@ angular.module('myApp').service('Utilities', function($http,$rootScope) {
 			if (newName.indexOf("#") != -1){
 				newName = newName.substring(newName.indexOf("#")+1, newName.length);
 			} else if (newName.indexOf("/") != -1){
-				newName = newName.substring(newName.indexOf("/")+1, newName.length);
+				newName = newName.substring(newName.lastIndexOf("/")+1, newName.length);
 			}
 		}
 		return newName;
